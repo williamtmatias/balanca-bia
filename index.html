@@ -81,6 +81,26 @@ details summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;alig
 @media(min-width:900px){body{padding-bottom:0}nav.bot{position:sticky;top:60px;inset:auto;grid-template-columns:repeat(5,auto);justify-content:center;gap:8px;border:0;border-bottom:1px solid var(--line)}nav.bot button{flex-direction:row;min-height:48px;font-size:14px;padding:0 16px;gap:8px}nav.bot button svg{width:20px;height:20px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.cols>.card{margin:0}}
 @media(max-width:600px){.scale{grid-template-columns:minmax(0,1fr) 5em}.scale .track{grid-column:1/-1;order:3}.zl{grid-column:1/-1;order:4}.site{grid-template-columns:minmax(0,1fr) repeat(3,3.6em) 3.2em}table{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.bmap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
+.bmap svg{width:100%;height:auto;max-height:440px}
+.dist{display:grid;gap:7px}.dist div{display:grid;grid-template-columns:7.5em minmax(0,1fr) 4.5em;gap:8px;align-items:center;font-size:13px}
+.dist .bar{height:12px;border-radius:6px;background:var(--soft);overflow:hidden}.dist .bar i{display:block;height:100%;border-radius:6px}
+.dist .v{text-align:right;white-space:nowrap;font-weight:600}
+.mleg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--mut);margin-top:6px}.mleg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+#print{display:none}
+@media(max-width:700px){.bmap{grid-template-columns:1fr}}
+@media print{@page{size:A4;margin:12mm}
+ body{background:#fff!important;color:#111!important;padding:0!important}
+ .top,nav.bot,main,dialog,.toast{display:none!important}
+ #print{display:block;font:11.5px/1.45 Inter,Arial,sans-serif;color:#111;--ink:#111;--mut:#555;--line:#ccc;--soft:#eef2f3;--card:#fff;--pri:#0b5d63;--pri2:#d6eef0;--c2:#d9640f;--c3:#6a4bc4;--ok:#2b7a3d;--bad:#b3261e}
+ #print .ph{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #0b5d63;padding-bottom:8px;margin-bottom:12px}
+ #print h1{font:700 22px "Barlow Condensed",Arial;color:#0b5d63;margin:0}#print h2{font:600 15px Inter,Arial;color:#0b5d63;margin:14px 0 6px;border-bottom:1px solid #ccc;padding-bottom:3px}
+ #print table{font-size:11px}#print th,#print td{padding:4px 6px;border-bottom:1px solid #ddd}
+ #print .pk{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}#print .pk div{border:1px solid #ccc;border-radius:6px;padding:6px 8px}#print .pk b{display:block;font:600 18px "Barlow Condensed",Arial}
+ #print .sec{break-inside:avoid}#print .bmap svg{max-height:300px}
+ #print .foot{margin-top:16px;font-size:10px;color:#666;border-top:1px solid #ccc;padding-top:6px}
+}
 </style>
 </head>
 <body>
@@ -95,6 +115,7 @@ details summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;alig
 <main id="app"></main>
 <dialog id="dlg"></dialog>
 <div class="toast" id="toast" role="status"></div>
+<div id="print"></div>
 <input type="file" id="fCsv" accept=".csv,text/csv" hidden>
 <input type="file" id="fBak" accept=".json,application/json" hidden>
 
@@ -234,7 +255,7 @@ function vPainel(c){
   const B=biaRows(c),T=tapeRows(c),K=skinRows(c).filter(x=>x.sbf!=null),b=B.at(-1),b0=B[0],t=T.at(-1),t0=T[0],k=K.at(-1),k0=K[0];
   const age=c.birth?ageAt(c,Date.now()):null,none=!B.length&&!T.length&&!K.length;
   let html=`<div class="card"><div class="row between"><div class="row" style="gap:12px"><span class="av" style="width:52px;height:52px;font-size:19px">${initials(c.name)}</span><div><h2 style="margin:0">${esc(c.name)}</h2><p class="mut">${c.sex==1?'Masculino':'Feminino'}${age!=null?' · '+age+' anos':''}${c.h?' · '+f(c.h,0)+' cm':''}${c.goal?' · '+esc(c.goal):''}</p></div></div>
-  <div class="row"><button class="sm" id="pEdit">Editar</button><button class="sm pri" id="pRep">Enviar relatório</button></div></div>${c.notes?`<p class="mut" style="margin-top:8px">${esc(c.notes)}</p>`:''}</div>`;
+  <div class="row"><button class="sm" id="pEdit">Editar</button><button class="sm" id="pRep">WhatsApp</button><button class="sm pri" id="pPdf">Exportar PDF</button></div></div>${c.notes?`<p class="mut" style="margin-top:8px">${esc(c.notes)}</p>`:''}</div>`;
   if(none){$('#app').innerHTML=html+`<div class="empty"><h2>Nenhuma avaliação ainda</h2><p class="mut">Faça a primeira avaliação: balança, perimetria ou dobras.</p><button class="pri" id="pGo" style="margin-top:10px">Nova avaliação</button></div>`;bindPainel(c);return}
   html+=`<div class="card"><div class="row between"><h3>Resumo atual</h3><button class="sm" id="pGo">+ Nova avaliação</button></div><div class="kpis">
     ${b?kpi(b.w,1,'kg','Peso',B.length>1?b.w-b0.w:null):''}
@@ -248,11 +269,12 @@ function vPainel(c){
     ${b?.ffmiN!=null?kpi(b.ffmiN,1,'','FFMI ajustado'):''}
     ${b?kpi(b.tdee,0,'kcal','Gasto diário est.'):''}
   </div><p class="mut" style="margin-top:8px">Variação desde a primeira avaliação. ${b?.bf!=null?`Gordura (balança) na faixa <b>${bfClass(b.bf,c.sex==1)}</b>.`:''}</p></div>`;
+  html+=mapCard(c);
   html+=recompCard(B);
   html+=compareCard(c,B,T,K);
   $('#app').innerHTML=html;bindPainel(c);
 }
-function bindPainel(c){$('#pEdit').onclick=()=>clientForm(c);$('#pRep').onclick=()=>report(c);$('#pGo').onclick=()=>go('avaliar')}
+function bindPainel(c){$('#pEdit').onclick=()=>clientForm(c);$('#pRep').onclick=()=>report(c);$('#pPdf').onclick=()=>pdfInfo(c);$('#pGo').onclick=()=>go('avaliar')}
 function recompCard(B){
   const comp=B.filter(o=>o.fm!=null);if(comp.length<3)return'';
   const last=comp.at(-1),win=comp.filter(o=>o.t>=last.t-30*864e5),base=win.length>=2?win:comp.slice(-5);
@@ -284,6 +306,61 @@ function report(c){
   openDlg(`<h2>Relatório</h2><textarea id="rT" style="min-height:260px;font-size:14px">${esc(txt)}</textarea><div class="row" style="margin-top:10px"><a class="btn pri" href="${esc(wa)}" target="_blank" rel="noopener">Enviar no WhatsApp</a><button id="rC">Copiar</button>${navigator.share?'<button id="rS">Compartilhar</button>':''}</div>`);
   $('#rC').onclick=()=>navigator.clipboard.writeText($('#rT').value).then(()=>toast('Relatório copiado'),()=>toast('Selecione e copie o texto'));
   $('#rS')?.addEventListener('click',()=>navigator.share({text:$('#rT').value}).catch(()=>{}));
+}
+
+
+/* ---------- mapa de gordura (dobras) ---------- */
+const MAPPOS={peitoral:[80,104,'F',100],axilar:[63,138,'F',142],abdominal:[90,182,'F',184],suprailiaca:[69,212,'F',226],coxa:[84,292,'F',292],subescapular:[118,122,'B',104],triceps:[153,128,'B',150]};
+const mmColor=v=>v==null?'var(--mut)':v<8?'#2b9a4a':v<13?'#8bbf3a':v<20?'#e0a21b':v<28?'#e06a1b':'#c62828';
+function figure(ox,label){const x=n=>n+ox;return`<g fill="var(--soft)" stroke="var(--line)" stroke-width="2" stroke-linejoin="round">
+<circle cx="${x(100)}" cy="38" r="21"/><rect x="${x(91)}" y="56" width="18" height="16" rx="4"/>
+<path d="M${x(62)} 74 Q${x(100)} 66 ${x(138)} 74 L${x(134)} 150 Q${x(128)} 190 ${x(132)} 236 L${x(68)} 236 Q${x(72)} 190 ${x(66)} 150 Z"/>
+<path d="M${x(62)} 76 Q${x(46)} 80 ${x(42)} 100 L${x(32)} 222 Q${x(36)} 232 ${x(44)} 226 L${x(58)} 120 Z"/>
+<path d="M${x(138)} 76 Q${x(154)} 80 ${x(158)} 100 L${x(168)} 222 Q${x(164)} 232 ${x(156)} 226 L${x(142)} 120 Z"/>
+<path d="M${x(68)} 234 L${x(98)} 234 L${x(96)} 388 Q${x(86)} 396 ${x(76)} 388 Z"/><path d="M${x(102)} 234 L${x(132)} 234 L${x(124)} 388 Q${x(114)} 396 ${x(104)} 388 Z"/></g>
+<text x="${x(100)}" y="414" text-anchor="middle" font-size="13" fill="var(--mut)">${label}</text>`}
+function mapSVG(k,prev){
+  const FO=110,BO=300;let g=`<svg viewBox="0 0 610 424" role="img" aria-label="Mapa de gordura subcutânea por região">${figure(FO,'Frente')}${figure(BO,'Costas')}`;
+  for(const[s,v] of Object.entries(k.folds)){const p=MAPPOS[s];if(!p||v==null)continue;const back=p[2]==='B',cx=p[0]+(back?BO:FO),cy=p[1],ly=p[3],d=prev?.folds?.[s]!=null?v-prev.folds[s]:null;
+    const tx=back?BO+182:FO+18,anc=back?'start':'end',lx=back?tx-4:tx+4;
+    g+=`<line x1="${lx}" y1="${ly}" x2="${cx}" y2="${cy}" stroke="var(--mut)" stroke-width="1" stroke-dasharray="3 3"/>
+    <circle cx="${cx}" cy="${cy}" r="${clamp(6+v*0.45,8,20)}" fill="${mmColor(v)}" opacity=".88" stroke="#fff" stroke-width="2"/>
+    <text x="${tx}" y="${ly-2}" text-anchor="${anc}" font-size="17" font-weight="700" fill="var(--ink)">${f(v,1)} mm</text>
+    <text x="${tx}" y="${ly+15}" text-anchor="${anc}" font-size="13.5" fill="var(--mut)">${SITES[s]}${d!=null?' · '+sg(d,1):''}</text>`}
+  return g+'</svg>';
+}
+function mapCard(c,forPrint){
+  const K=skinRows(c).filter(x=>x.sbf!=null);if(!K.length)return'';
+  const k=K.at(-1),prev=K.length>1?K.at(-2):null,ents=Object.entries(k.folds).filter(([,v])=>v!=null).sort((a,b)=>b[1]-a[1]),tot=ents.reduce((s,[,v])=>s+v,0),top2=ents.slice(0,2);
+  const share=top2.reduce((s,[,v])=>s+v,0)/tot*100,max=ents[0][1];
+  const changes=prev?ents.filter(([s])=>prev.folds[s]!=null).map(([s,v])=>[s,v-prev.folds[s]]).sort((a,b)=>a[1]-b[1]):[];
+  const best=changes[0],worst=changes.at(-1);
+  return`<div class="${forPrint?'sec':'card'}">${forPrint?'<h2>Mapa de gordura por região</h2>':'<h3>Mapa de gordura por região</h3>'}<p class="mut">${PROTO[k.proto].n} · ${dd(k.t)}${prev?' · variação desde '+dd(prev.t):''}</p>
+  <div class="bmap">${mapSVG(k,prev)}<div><p><b>${SITES[top2[0][0]]}${top2[1]?' e '+SITES[top2[1][0]].toLowerCase():''}</b> concentram <b>${f(share,0)}%</b> da gordura medida.</p>
+  ${best&&best[1]<0?`<p>Maior redução: <b>${SITES[best[0]]}</b> (${sg(best[1],1)} mm).</p>`:''}${worst&&worst[1]>0?`<p>Maior aumento: <b>${SITES[worst[0]]}</b> (${sg(worst[1],1)} mm).</p>`:''}
+  <div class="dist" style="margin-top:10px">${ents.map(([s,v])=>`<div><span>${SITES[s]}</span><span class="bar"><i style="width:${v/max*100}%;background:${mmColor(v)}"></i></span><span class="v">${f(v,1)} mm</span></div>`).join('')}</div>
+  <div class="mleg"><span><i style="background:#2b9a4a"></i>&lt;8</span><span><i style="background:#8bbf3a"></i>8–13</span><span><i style="background:#e0a21b"></i>13–20</span><span><i style="background:#e06a1b"></i>20–28</span><span><i style="background:#c62828"></i>&gt;28 mm</span></div></div></div>
+  <p class="mut" style="margin-top:8px">Espessura da gordura subcutânea medida com adipômetro em cada ponto. Mostra a distribuição regional; não inclui a gordura visceral.</p></div>`;
+}
+
+/* ---------- relatório PDF ---------- */
+function pdfInfo(c){openDlg(`<h2>Exportar PDF</h2><p>Vai abrir a tela de impressão do Chrome. Escolha <b>Salvar como PDF</b> e toque no botão de download. Depois é só enviar o arquivo ao cliente pelo WhatsApp.</p><div class="row" style="margin-top:12px"><button class="pri" id="pdfGo">Gerar PDF</button></div>`);$('#pdfGo').onclick=()=>{dlg.close();pdfReport(c)}}
+function pdfReport(c){
+  const B=biaRows(c),T=tapeRows(c),K=skinRows(c).filter(x=>x.sbf!=null),b=B.at(-1),b0=B[0],t=T.at(-1),t0=T[0],k=K.at(-1),k0=K[0],age=c.birth?ageAt(c,Date.now()):null;
+  const pk=(v,d,u,l)=>v==null||!isFinite(v)?'':`<div><b>${f(v,d)} ${u}</b>${l}</div>`;
+  let h=`<div class="ph"><div><h1>Relatório de Avaliação Corporal</h1><div>${esc(c.name)} · ${c.sex==1?'Masculino':'Feminino'}${age!=null?' · '+age+' anos':''}${c.h?' · '+f(c.h,0)+' cm':''}${c.goal?' · Objetivo: '+esc(c.goal):''}</div></div><div style="text-align:right">Emitido em ${dd(Date.now())}${S.pro?'<br>Avaliador: '+esc(S.pro):''}</div></div>`;
+  h+=`<div class="sec"><h2>Resumo</h2><div class="pk">${b?pk(b.w,1,'kg','Peso'):''}${b?.bf!=null?pk(b.bf,1,'%','Gordura (bioimpedância)'):''}${k?pk(k.sbf,1,'%','Gordura (dobras)'):''}${t?.navy!=null?pk(t.navy,1,'%','Gordura (fita)'):''}${b?.lbm!=null?pk(b.lbm,1,'kg','Massa magra'):k?.slbm!=null?pk(k.slbm,1,'kg','Massa magra (dobras)'):''}${b?.smm!=null?pk(b.smm,1,'kg','Músculo esquelético'):''}${b?.bmi?pk(b.bmi,1,'','IMC'):''}${t?.rce?pk(t.rce,2,'','Cintura/altura'):''}${b?.visc!=null?pk(b.visc,0,'','Gordura visceral'):''}${b?pk(b.tdee,0,'kcal','Gasto diário estimado'):''}</div></div>`;
+  const rows=[];const add=(l,a,z,d,u)=>{if(z!=null)rows.push(`<tr><td>${l}</td><td>${a!=null?f(a,d)+' '+u:'–'}</td><td>${f(z,d)} ${u}</td><td><b>${a!=null?sg(z-a,d):'–'}</b></td></tr>`)};
+  if(b){add('Peso',B.length>1?b0.w:null,b.w,1,'kg');add('Gordura (bioimp.)',B.length>1?b0.bf:null,b.bf,1,'%');add('Massa gorda',B.length>1?b0.fm:null,b.fm,1,'kg');add('Massa magra',B.length>1?b0.lbm:null,b.lbm,1,'kg');add('Músculo esquelético',B.length>1?b0.smm:null,b.smm,1,'kg')}
+  if(k){add('Gordura (dobras)',K.length>1?k0.sbf:null,k.sbf,1,'%');add('Soma das dobras',K.length>1?k0.sum:null,k.sum,1,'mm')}
+  if(rows.length)h+=`<div class="sec"><h2>Composição corporal: primeira × última</h2><table><thead><tr><th>Medida</th><th>Primeira${B[0]||K[0]?' ('+dd((B[0]||K[0]).t)+')':''}</th><th>Última</th><th>Diferença</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+  h+=mapCard(c,true);
+  if(k)h+=`<div class="sec"><h2>Dobras cutâneas (mm)</h2><table><thead><tr><th>Ponto</th>${K.length>1?'<th>Primeira</th>':''}<th>Atual</th>${K.length>1?'<th>Diferença</th>':''}</tr></thead><tbody>${Object.entries(k.folds).map(([s,v])=>`<tr><td>${SITES[s]}</td>${K.length>1?`<td>${f(k0.folds[s],1)}</td>`:''}<td>${f(v,1)}</td>${K.length>1?`<td>${k0.folds[s]!=null?sg(v-k0.folds[s],1):'–'}</td>`:''}</tr>`).join('')}</tbody></table></div>`;
+  if(t)h+=`<div class="sec"><h2>Perimetria (cm)</h2><table><thead><tr><th>Medida</th>${T.length>1?'<th>Primeira</th>':''}<th>Atual (${dd(t.t)})</th>${T.length>1?'<th>Diferença</th>':''}</tr></thead><tbody>${TAPE.filter(([key])=>t[key]).map(([key,n])=>`<tr><td>${n}</td>${T.length>1?`<td>${f(t0[key],1)}</td>`:''}<td>${f(t[key],1)}</td>${T.length>1?`<td>${t0[key]?sg(t[key]-t0[key],1):'–'}</td>`:''}</tr>`).join('')}</tbody></table></div>`;
+  if(c.notes)h+=`<div class="sec"><h2>Observações</h2><p>${esc(c.notes)}</p></div>`;
+  h+=`<div class="foot">Bioimpedância estimada por equações a partir da impedância medida; dobras por Jackson &amp; Pollock e Siri; fita pela fórmula da Marinha dos EUA. Valores de métodos diferentes não são diretamente comparáveis: acompanhe a tendência de cada um.</div>`;
+  $('#print').innerHTML=h;const old=document.title;document.title='Avaliacao - '+c.name+' - '+new Date().toISOString().slice(0,10);
+  setTimeout(()=>{window.print();document.title=old},150);
 }
 
 /* ---------- Avaliar ---------- */
@@ -348,6 +425,7 @@ function sDobras(c){
   <div class="result" id="kRes" style="margin-top:14px"></div>
   <button class="pri" id="kSave" style="margin-top:12px;width:100%">Salvar avaliação</button></div>`;
   if(K.length)h+=`<div class="card"><h3>Histórico</h3><div class="scroll"><table><thead><tr><th>Data</th><th>Protocolo</th><th>Soma</th><th>Gordura</th><th>M. gorda</th><th>M. magra</th><th></th></tr></thead><tbody>${K.slice().reverse().map(o=>`<tr><td>${dd(o.t)}</td><td>${o.proto==='jp7'?'7 dobras':'3 dobras'}</td><td>${f(o.sum,1)} mm</td><td>${f(o.sbf,1)}%</td><td>${f(o.sfm,1)}</td><td>${f(o.slbm,1)}</td><td><button class="sm ghost danger" data-del="skins|${o.t}">Apagar</button></td></tr>`).join('')}</tbody></table></div><p class="mut">Densidade corporal por Jackson &amp; Pollock; % de gordura pela equação de Siri.</p></div>`;
+  h+=mapCard(c);
   $('#sub').innerHTML=h;$('#kP').value=proto;
   const read=()=>{const folds={};sites.forEach(s=>folds[s]=[0,1,2].map(i=>+document.querySelector(`[data-s="${s}"][data-i="${i}"]`).value||0).filter(x=>x>0));return{t:new Date($('#kT').value).getTime(),proto,w:+$('#kW').value||null,folds}};
   const upd=()=>{const e=read(),o=skinRow(e,c);sites.forEach(s=>$('#m-'+s).textContent=f(mean(e.folds[s]),1));
@@ -403,11 +481,13 @@ function vAjustes(){
   const n=S.clients.length,m=S.clients.reduce((s,c)=>s+c.items.length+c.tapes.length+c.skins.length,0);
   $('#app').innerHTML=`<div class="card"><h2>Backup</h2><p>Os dados ficam salvos <b>neste celular</b> (${n} clientes, ${m} registros). Faça backup com frequência: se o navegador for limpo, os dados somem.</p>
   <div class="row" style="margin-top:10px"><button class="pri" id="aExp">Baixar backup</button><button id="aImp">Restaurar backup</button></div></div>
+  <div class="card"><h2>Avaliador</h2><p class="mut">Aparece no relatório em PDF.</p><div class="form" style="margin-top:8px"><label>Nome e registro (ex.: CREF)<input id="aPro" value="${esc(S.pro||'')}" placeholder="Seu nome · CREF 000000-G/UF"></label><button id="aProS">Salvar</button></div></div>
   <div class="card"><h2>Instalar como aplicativo</h2><p>No Chrome, toque no menu ⋮ e em <b>Adicionar à tela inicial</b> (ou <b>Instalar app</b>). O app abre em tela cheia, como um aplicativo.</p></div>
   <details class="card"><summary>Balança por Bluetooth</summary><p>A balança OKOK anuncia peso e impedância sem pareamento. O Chrome do Android lê esse sinal com <b>chrome://flags</b> → <b>Experimental Web Platform features</b> ativado. Feche o openScale antes de medir. Também é possível importar o CSV exportado pelo openScale na aba Balança.</p></details>
   <details class="card"><summary>Padronização das avaliações</summary><p><b>Balança:</b> ao acordar, em jejum, após ir ao banheiro, descalço e com os pés secos.</p><p><b>Dobras:</b> lado direito, cliente relaxado, pinçar 1 cm acima do ponto, ler 2 s após soltar o adipômetro; repetir até 3 vezes.</p><p><b>Perimetria:</b> fita firme sem comprimir; cintura no ponto mais estreito, abdômen na altura do umbigo, quadril na maior circunferência dos glúteos, braço contraído no pico do bíceps.</p></details>`;
   $('#aExp').onclick=()=>{const b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='avaliacao-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('Backup baixado')};
   $('#aImp').onclick=()=>$('#fBak').click();
+  $('#aProS').onclick=()=>{S.pro=$('#aPro').value.trim();save();toast('Avaliador salvo')};
 }
 $('#fBak').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{const j=JSON.parse(await file.text());if(!Array.isArray(j.clients))throw 0;
   let add=0,upd=0;j.clients.forEach(c=>{c.items??=[];c.tapes??=[];c.skins??=[];const i=S.clients.findIndex(x=>x.id===c.id);if(i>=0){S.clients[i]=c;upd++}else{S.clients.push(c);add++}});
