@@ -354,8 +354,8 @@ function pdfReport(c){
   if(b){add('Peso',B.length>1?b0.w:null,b.w,1,'kg');add('Gordura (bioimp.)',B.length>1?b0.bf:null,b.bf,1,'%');add('Massa gorda',B.length>1?b0.fm:null,b.fm,1,'kg');add('Massa magra',B.length>1?b0.lbm:null,b.lbm,1,'kg');add('Músculo esquelético',B.length>1?b0.smm:null,b.smm,1,'kg')}
   if(k){add('Gordura (dobras)',K.length>1?k0.sbf:null,k.sbf,1,'%');add('Soma das dobras',K.length>1?k0.sum:null,k.sum,1,'mm')}
   if(rows.length)h+=`<div class="sec"><h2>Composição corporal: primeira × última</h2><table><thead><tr><th>Medida</th><th>Primeira${B[0]||K[0]?' ('+dd((B[0]||K[0]).t)+')':''}</th><th>Última</th><th>Diferença</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
-  if(b&&b.bf!=null){const st=statuses(c,b),bt=bodyType(c,b,st),r=(l,v,d,u,k)=>v==null||!isFinite(v)?'':`<tr><td>${l}</td><td>${f(v,d)} ${u}</td><td>${k?ST[k][0]:''}</td></tr>`;
-    h+=`<div class="sec"><h2>Bioimpedância · ${dd(b.t)}</h2><table><thead><tr><th>Métrica</th><th>Valor</th><th>Classificação</th></tr></thead><tbody>${r('IMC',b.bmi,1,'',st.bmi)}${r('Gordura',b.bf,1,'%',st.bf)}${r('Músculo esquelético',st.smmP,1,'%',st.smm)}${r('Água',b.water,1,'%',st.water)}${r('Gordura visceral',b.visc,0,'',st.visc)}${r('Massa óssea',b.bone,1,'kg',st.bone)}${r('Proteína',b.prot,1,'%',st.prot)}${r('Idade metabólica',b.mage,0,'anos',st.mage)}${r('Metabolismo basal',b.katch||b.mifflin,0,'kcal')}</tbody></table>${bt?`<p style="margin-top:6px"><b>Tipo de corpo: ${bt.cur[0]}.</b> ${bt.cur[1]}</p>`:''}${b.lbm!=null&&c.h?(()=>{const tbf=(st.fc[0]+st.fc[1])/2/100,tw=b.lbm/(1-tbf);return`<p><b>Peso alvo:</b> ${f(tw,1)} kg (${f(tbf*100,0)}% de gordura mantendo a massa magra atual) · diferença ${sg(tw-b.w,1)} kg.</p>`})():''}</div>`}
+  if(b&&b.bf!=null){const st=statuses(c,b),bt=bodyType(c,b,st),R=refs(c,b,st),r=(l,v,d,u,k,ref)=>v==null||!isFinite(v)?'':`<tr><td>${l}</td><td>${f(v,d)} ${u}</td><td>${k?ST[k][0]:''}</td><td style="text-align:left;white-space:normal;font-size:10px">${ref||''}</td></tr>`;
+    h+=`<div class="sec"><h2>Bioimpedância · ${dd(b.t)}</h2><table><thead><tr><th>Métrica</th><th>Valor</th><th>Classificação</th><th style="text-align:left">Referência</th></tr></thead><tbody>${r('Peso',b.w,1,'kg',st.bmi,R.w)}${r('IMC',b.bmi,1,'',st.bmi,R.bmi)}${r('Gordura',b.bf,1,'%',st.bf,R.bf)}${r('Músculo esquelético',st.smmP,1,'%',st.smm,R.smmP)}${r('Água',b.water,1,'%',st.water,R.water)}${r('Gordura visceral',b.visc,0,'',st.visc,R.visc)}${r('Massa óssea',b.bone,1,'kg',st.bone,R.bone)}${r('Proteína',b.prot,1,'%',st.prot,R.prot)}${r('Idade metabólica',b.mage,0,'anos',st.mage,R.mage)}${r('Metabolismo basal',b.katch||b.mifflin,0,'kcal')}</tbody></table>${bt?`<p style="margin-top:6px"><b>Tipo de corpo: ${bt.cur[0]}.</b> ${bt.cur[1]}</p>`:''}${b.lbm!=null&&c.h?(()=>{const tbf=(st.fc[0]+st.fc[1])/2/100,tw=b.lbm/(1-tbf);return`<p><b>Peso alvo:</b> ${f(tw,1)} kg (${f(tbf*100,0)}% de gordura mantendo a massa magra atual) · diferença ${sg(tw-b.w,1)} kg.</p>`})():''}</div>`}
   h+=mapCard(c,true);
   if(k)h+=`<div class="sec"><h2>Dobras cutâneas (mm)</h2><table><thead><tr><th>Ponto</th>${K.length>1?'<th>Primeira</th>':''}<th>Atual</th>${K.length>1?'<th>Diferença</th>':''}</tr></thead><tbody>${Object.entries(k.folds).map(([s,v])=>`<tr><td>${SITES[s]}</td>${K.length>1?`<td>${f(k0.folds[s],1)}</td>`:''}<td>${f(v,1)}</td>${K.length>1?`<td>${k0.folds[s]!=null?sg(v-k0.folds[s],1):'–'}</td>`:''}</tr>`).join('')}</tbody></table></div>`;
   if(t)h+=`<div class="sec"><h2>Perimetria (cm)</h2><table><thead><tr><th>Medida</th>${T.length>1?'<th>Primeira</th>':''}<th>Atual (${dd(t.t)})</th>${T.length>1?'<th>Diferença</th>':''}</tr></thead><tbody>${TAPE.filter(([key])=>t[key]).map(([key,n])=>`<tr><td>${n}</td>${T.length>1?`<td>${f(t0[key],1)}</td>`:''}<td>${f(t[key],1)}</td>${T.length>1?`<td>${t0[key]?sg(t[key]-t0[key],1):'–'}</td>`:''}</tr>`).join('')}</tbody></table></div>`;
@@ -397,6 +397,26 @@ function statuses(c,L){
     ob:band(ob,[-10,10,20],['baixo','normal','alto','obeso']),
     mage:L.mage!=null?(L.mage<=L.a?'bom':'alto'):null};
 }
+
+function refs(c,L,stt){
+  const m=c.sex==1,fc=stt.fc,w=L.w,hm=c.h/100,kg=p=>f(p*w/100,1),r=(cuts,labs,fmt,u='')=>labs.map((l,i)=>i===0?`<${fmt(cuts[0])}${u} ${l}`:i===labs.length-1?`≥${fmt(cuts[i-1])}${u} ${l}`:`${fmt(cuts[i-1])}–${fmt(cuts[i])}${u} ${l}`).join(' · ');
+  const n1=v=>f(v,1),n0=v=>f(v,0),sm=m?[33,39]:[24,30],wa=m?[50,65]:[45,60];
+  return{
+    w:c.h?r([18.5*hm*hm,25*hm*hm,30*hm*hm],['baixo','saudável','alto','obeso'],n1,' kg')+' (pelo IMC)':'',
+    bmi:r([18.5,25,30],['baixo','saudável','alto','obeso'],n1)+' (OMS)',
+    bf:r(fc,['baixo','saudável','alto','obeso'],n0,'%')+` (${m?'homens':'mulheres'} ${L.a<40?'20–39':L.a<60?'40–59':'60+'} anos · Gallagher 2000)`,
+    fm:r(fc.map(p=>p*w/100),['baixo','saudável','alto','obeso'],n1,' kg')+' (mesma faixa do % de gordura)',
+    smmP:r(sm,['baixo','saudável','excelente'],n0,'%'),
+    smm:r(sm.map(p=>p*w/100),['baixo','saudável','excelente'],n1,' kg'),
+    water:r(wa,['baixo','saudável','alto'],n0,'%'),
+    waterKg:r(wa.map(p=>p*w/100),['baixo','saudável','alto'],n1,' kg'),
+    visc:'1–9 normal · 10–14 alto · ≥15 muito alto',
+    bone:`≥${f(boneRef(c,w),1)} kg adequado (${m?'homens':'mulheres'} com ${w<(m?60:45)?'menos de '+(m?60:45):w<(m?75:60)?(m?'60–75':'45–60'):'mais de '+(m?75:60)} kg)`,
+    prot:r([16,20],['baixo','saudável','excelente'],n0,'%'),
+    ob:'<−10% baixo · −10 a 10% saudável · 10–20% alto · ≥20% obeso (vs. peso do IMC 22)',
+    mage:'igual ou menor que a idade real = bom',
+    ffmi:m?'18–20 média · 20–22 treinado · 22–25 avançado':'14–16 média · 16–18 treinada · 18–21 avançada'};
+}
 const badge=k=>k?`<span style="color:${ST[k][1]};font-size:12.5px;font-weight:600;white-space:nowrap">${ST[k][0]}</span>`:'';
 function bodyType(c,L,stt){
   if(L.bmi==null||L.bf==null)return null;const r=L.bmi<18.5?2:L.bmi<25?1:0,col=L.bf<stt.fc[0]+ (c.sex==1?4:3)?0:L.bf<stt.fc[1]?1:2;
@@ -407,14 +427,15 @@ function bodyType(c,L,stt){
 }
 function analysis(c,L,B){
   const stt=statuses(c,L),m=c.sex==1,prev=B.at(-2),last30=B.filter(o=>o.t>=L.t-30*864e5),best=last30.length?Math.min(...last30.map(o=>o.w)):null;
-  const row=(lab,v,d,u,k)=>v==null||!isFinite(v)?'':`<div class="hist" style="padding:9px 0"><div><b style="font-weight:500">${lab}</b></div><div style="text-align:right;white-space:nowrap;flex:none"><span class="num" style="font-size:22px">${f(v,d)}</span> <span class="mut">${u}</span><br>${badge(k)}</div></div>`;
+  const R=refs(c,L,stt);
+  const row=(lab,v,d,u,k,ref)=>v==null||!isFinite(v)?'':`<div class="hist" style="padding:9px 0;align-items:flex-start"><div><b style="font-weight:500">${lab}</b>${ref?`<span style="font-size:12px">${ref}</span>`:''}</div><div style="text-align:right;white-space:nowrap;flex:none"><span class="num" style="font-size:22px">${f(v,d)}</span> <span class="mut">${u}</span><br>${badge(k)}</div></div>`;
   let h=`<div class="card"><div class="row" style="gap:16px"><div style="flex:1"><p class="mut">Comparado com a medição anterior${prev?' ('+dd(prev.t)+')':''}</p><b class="${prev&&L.w-prev.w>0?'up':'down'}">${prev?sg(L.w-prev.w,1)+' kg':'–'}</b></div><div style="flex:1"><p class="mut">Menor peso em 30 dias</p><b>${best!=null?f(best,1)+' kg':'–'}</b></div></div></div>`;
   h+=`<div class="card"><h3>Métricas · ${dd(L.t)}</h3>
-    ${row('Peso',L.w,1,'kg',stt.bmi)}${row('IMC',L.bmi,1,'',stt.bmi)}${row('Gordura',L.bf,1,'%',stt.bf)}${row('Massa gorda',L.fm,1,'kg',stt.bf)}
-    ${row('Músculo esquelético',stt.smmP,1,'%',stt.smm)}${row('Massa de músculo esquelético',L.smm,1,'kg',stt.smm)}${row('Água',L.water,1,'%',stt.water)}${row('Massa de água',L.water!=null?L.water/100*L.w:null,1,'kg',stt.water)}
-    ${row('Gordura visceral',L.visc,0,'',stt.visc)}${row('Massa óssea',L.bone,1,'kg',stt.bone)}${row('Proteína',L.prot,1,'%',stt.prot)}${row('Obesidade (vs. peso ideal)',stt.ob,1,'%',stt.ob)}
-    ${row('Massa magra (LBM)',L.lbm,1,'kg')}${row('Metabolismo basal',L.katch||L.mifflin,0,'kcal')}${row('Gasto diário estimado',L.tdee,0,'kcal')}${row('Idade metabólica',L.mage,0,'anos',stt.mage)}${row('Idade real',L.a,0,'anos')}${row('FFMI ajustado',L.ffmiN,1,'')}${row('Altura',+c.h,0,'cm')}
-    <p class="mut" style="margin-top:8px">Faixas de gordura por sexo e idade (Gallagher et al., 2000); IMC pela OMS; peso ideal com IMC 22.</p></div>`;
+    ${row('Peso',L.w,1,'kg',stt.bmi,R.w)}${row('IMC',L.bmi,1,'',stt.bmi,R.bmi)}${row('Gordura',L.bf,1,'%',stt.bf,R.bf)}${row('Massa gorda',L.fm,1,'kg',stt.bf,R.fm)}
+    ${row('Músculo esquelético',stt.smmP,1,'%',stt.smm,R.smmP)}${row('Massa de músculo esquelético',L.smm,1,'kg',stt.smm,R.smm)}${row('Água',L.water,1,'%',stt.water,R.water)}${row('Massa de água',L.water!=null?L.water/100*L.w:null,1,'kg',stt.water,R.waterKg)}
+    ${row('Gordura visceral',L.visc,0,'',stt.visc,R.visc)}${row('Massa óssea',L.bone,1,'kg',stt.bone,R.bone)}${row('Proteína',L.prot,1,'%',stt.prot,R.prot)}${row('Obesidade (vs. peso ideal)',stt.ob,1,'%',stt.ob,R.ob)}
+    ${row('Massa magra (LBM)',L.lbm,1,'kg')}${row('Metabolismo basal',L.katch||L.mifflin,0,'kcal',null,L.katch?'Katch-McArdle, pela massa magra':'Mifflin-St Jeor')}${row('Gasto diário estimado',L.tdee,0,'kcal',null,'metabolismo basal × nível de atividade')}${row('Idade metabólica',L.mage,0,'anos',stt.mage,R.mage)}${row('Idade real',L.a,0,'anos')}${row('FFMI ajustado',L.ffmiN,1,'',null,R.ffmi)}${row('Altura',+c.h,0,'cm')}
+    <p class="mut" style="margin-top:8px">Fontes: IMC pela OMS; gordura por sexo e idade (Gallagher et al., 2000); gordura visceral pela escala usada nas balanças (1–59); músculo, água, ossos e proteína pelas faixas de referência usadas pelos fabricantes de balanças de bioimpedância.</p></div>`;
   if(L.bf!=null&&L.water!=null){const parts=[['Água',L.water/100*L.w,stt.water,'#2f7fd1'],['Gordura',L.fm,stt.bf,'#e06a1b'],['Proteína',L.prot/100*L.w,stt.prot,'#8a63d2'],['Ossos',L.bone,stt.bone,'#7d8b8e']],mx=Math.max(...parts.map(p=>p[1]));
     h+=`<div class="card"><h3>Análise da composição corporal</h3><p class="mut">Peso ≈ água + gordura + proteína + ossos</p><div class="row" style="align-items:flex-end;gap:10px;margin:6px 0 10px"><span class="num big" style="font-size:52px">${f(L.w,1)}</span><span class="mut">kg</span></div>
     ${parts.map(p=>`<div style="margin:10px 0"><div class="row between"><b style="font-weight:600">${p[0]}</b>${badge(p[2])}</div><div class="row" style="gap:8px;flex-wrap:nowrap"><div style="flex:1;height:14px;border-radius:7px;background:var(--soft);overflow:hidden"><i style="display:block;height:100%;width:${p[1]/mx*100}%;background:${p[3]};border-radius:7px"></i></div><span class="num" style="font-size:20px;width:3.2em;text-align:right">${f(p[1],1)}</span></div></div>`).join('')}</div>`}
