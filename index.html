@@ -2,136 +2,146 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Composição Corporal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5d63">
+<title>Avaliação Corporal</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* VOICE: clínico, preciso, sem enfeite — uma folha de resultado de bioimpedância
-   IDEA: a folha impressa de um exame de composição corporal, com barras e faixas de referência
-   PICTURE: régua de faixas (peso, gordura, visceral) com marcador do valor atual + gráfico de tendência
-   COLOUR and TYPE: branco/papel, tinta grafite, azul-petróleo dominante, laranja de alerta; Barlow Condensed nos números, Inter no texto
-   LAYOUT: cabeçalho com ações, folha de resultado em destaque, recomposição, gráficos, validação, histórico, perfil */
-:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0e1517);--paper:light-dark(#f3f6f6,#152022);--ink:light-dark(#15191c,#e8eeee);--mut:light-dark(#5b6669,#9aa9ab);--line:light-dark(#d9e1e2,#26363a);--pri:light-dark(#0b5d63,#4fc1c8);--pri2:light-dark(#d4ecee,#173c40);--warn:light-dark(#d9640f,#ff9a4d);--ok:light-dark(#2b7a3d,#6fd08a);--bad:light-dark(#b3261e,#ff7b72)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+:root{color-scheme:light dark;--bg:light-dark(#eef2f3,#0b1214);--card:light-dark(#ffffff,#131e21);--soft:light-dark(#f4f7f8,#1a282b);--ink:light-dark(#14191c,#e6eded);--mut:light-dark(#5d6a6d,#93a4a6);--line:light-dark(#dde4e6,#253538);--pri:light-dark(#0b5d63,#4fc1c8);--pri2:light-dark(#d6eef0,#16393c);--c2:light-dark(#d9640f,#ff9a4d);--c3:light-dark(#6a4bc4,#a991ff);--ok:light-dark(#2b7a3d,#6fd08a);--bad:light-dark(#b3261e,#ff7b72);--sh:0 1px 2px #0000000d,0 4px 14px #00000010}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
-.band{padding:clamp(20px,4vw,48px) max(5vw,16px);max-width:1240px;margin:0 auto}
-h1,h2,.num{font-family:"Barlow Condensed",Inter,sans-serif;font-weight:600;line-height:1.05}
-h1{font-size:clamp(32px,6vw,48px);margin:0;text-wrap:balance}
-h2{font-size:30px;margin:0 0 6px}
+html{scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+.num,h1,h2{font-family:"Barlow Condensed",Inter,sans-serif;font-weight:600;line-height:1.05}
+h1{font-size:24px;margin:0}h2{font-size:26px;margin:0 0 4px}h3{font-size:16px;margin:0 0 8px}
 p{margin:.3em 0}.mut{color:var(--mut);font-size:14px}
-header.band{display:flex;flex-wrap:wrap;gap:14px;align-items:end;justify-content:space-between;padding-bottom:12px}
-.acts{display:flex;flex-wrap:wrap;gap:8px}
-button,.btn{font:600 15px Inter,sans-serif;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
-button.pri{background:var(--pri);color:var(--bg);border-color:var(--pri)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
-input,select{font:16px Inter,sans-serif;min-height:44px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.top{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:calc(10px + env(safe-area-inset-top)) max(4vw,14px) 10px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.top h1{color:#fff;font-size:22px;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:8px;background:#ffffff26;color:#fff;border:0;border-radius:999px;padding:0 14px;min-height:40px;font:600 15px Inter;cursor:pointer;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+main{max-width:1100px;margin:0 auto;padding:16px max(4vw,12px)}
+.card{background:var(--card);border-radius:14px;box-shadow:var(--sh);padding:16px;margin-bottom:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.between{justify-content:space-between}
+button,.btn{font:600 15px Inter,sans-serif;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+button.pri,.btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}
+button.ghost{background:transparent}button.sm{min-height:34px;padding:0 10px;font-size:13px}
+button.danger{color:var(--bad)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--c2);outline-offset:2px}
+input,select,textarea{font:16px Inter,sans-serif;min-height:44px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+textarea{padding:10px;min-height:80px}
 label{font-size:13px;color:var(--mut);display:grid;gap:4px}
-.sheet{background:var(--paper);border-top:6px solid var(--pri)}
-.sheethead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
-.big{font-size:clamp(56px,12vw,96px);color:var(--pri)}
-.big small{font-size:.4em;color:var(--mut)}
-.delta{font:600 15px Inter;white-space:nowrap}
-.scale{display:grid;grid-template-columns:9.5em minmax(0,1fr) 5.5em;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
-.scale b{font-weight:600;font-size:15px}.scale .v{text-align:right;font:600 22px "Barlow Condensed",Inter,sans-serif;white-space:nowrap}
-.track{position:relative;height:30px;display:flex;border-radius:4px;overflow:visible}
-.track i{display:block;height:100%;opacity:.85}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;align-items:end}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:transparent;min-height:40px;font-size:14px}
+.seg button[aria-pressed=true]{background:var(--card);box-shadow:var(--sh);color:var(--pri)}
+nav.bot{position:fixed;inset:auto 0 0 0;z-index:6;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom)}
+nav.bot button{border:0;border-radius:0;background:transparent;flex-direction:column;gap:2px;min-height:62px;font-size:11.5px;color:var(--mut);padding:0}
+nav.bot button svg{width:24px;height:24px}
+nav.bot button[aria-current=page]{color:var(--pri)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--soft);border-radius:12px;padding:12px}
+.kpi .num{font-size:30px;white-space:nowrap}.kpi .num small{font-size:15px;color:var(--mut)}
+.kpi p{font-size:13px;color:var(--mut);margin:2px 0 0}
+.up{color:var(--c2)}.down{color:var(--ok)}.flat{color:var(--mut)}
+.big{font-size:clamp(52px,12vw,80px);color:var(--pri)}.big small{font-size:.4em;color:var(--mut)}
+.scale{display:grid;grid-template-columns:9em minmax(0,1fr) 5em;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.scale b{font-weight:600;font-size:14px}.scale .v{text-align:right;font:600 20px "Barlow Condensed",Inter,sans-serif;white-space:nowrap}
+.track{position:relative;height:26px;display:flex}.track i{display:block;height:100%}
 .track i:first-child{border-radius:4px 0 0 4px}.track i:last-of-type{border-radius:0 4px 4px 0}
-.track em{position:absolute;top:-6px;width:4px;height:42px;background:var(--ink);border-radius:2px;transform:translateX(-2px);transition:left .6s}
-.zl{display:flex;font-size:12px;color:var(--mut);grid-column:2}.zl span{text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:20px}
-.cell{background:var(--bg);padding:12px 14px}
-.cell .num{font-size:30px;white-space:nowrap}.cell .num small{font-size:16px;color:var(--mut)}
-.cell p{font-size:13px;color:var(--mut);margin:0}
-.recomp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:14px}
-.recomp>div{border-left:4px solid var(--pri);padding-left:12px}
-.verdict{font-size:18px;font-weight:500;margin-top:14px;max-width:70ch}
-.fig{position:relative;min-height:300px;margin-top:10px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
-.tabs{display:flex;flex-wrap:wrap;gap:6px}.tabs button{min-height:38px;font-size:14px}.tabs button[aria-pressed=true]{background:var(--pri2);border-color:var(--pri);color:var(--ink)}
-.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end;max-width:900px}
-table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}
-th{font-weight:600;color:var(--mut)}
+.track em{position:absolute;top:-5px;width:4px;height:36px;background:var(--ink);border-radius:2px;transform:translateX(-2px)}
+.zl{display:flex;font-size:11.5px;color:var(--mut);grid-column:2}.zl span{text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{font-weight:600;color:var(--mut);font-size:13px}
 .scroll{overflow-x:auto}
-dialog{border:0;border-radius:14px;padding:22px;max-width:min(560px,94vw);background:var(--bg);color:var(--ink)}
-dialog::backdrop{background:#0008}
+.client{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;border:1px solid var(--line);background:var(--card);width:100%;text-align:left;min-height:64px;margin-bottom:8px;font:inherit;color:inherit}
+.client[aria-current=true]{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri2)}
+.av{flex:none;width:44px;height:44px;border-radius:50%;background:var(--pri2);color:var(--pri);display:grid;place-items:center;font:700 17px Inter}
+.client .meta{flex:1}.client .meta b{display:block}.client .meta span{font-size:13px;color:var(--mut)}
+.fig{position:relative;min-height:280px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mut);margin-top:6px}.legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips button{min-height:36px;font-size:13px;padding:0 12px;border-radius:999px}.chips button[aria-pressed=true]{background:var(--pri2);border-color:var(--pri);color:var(--pri)}
+.grp{font-size:12px;color:var(--mut);margin:10px 0 6px;font-weight:600}
+.site{display:grid;grid-template-columns:8.5em repeat(3,minmax(0,1fr)) 4em;gap:6px;align-items:center;padding:4px 0}
+.site b{font-size:14px;font-weight:600;overflow-wrap:anywhere;hyphens:auto}.site .m{text-align:right;font:600 18px "Barlow Condensed",Inter,sans-serif}
+.site input{padding:0 6px;text-align:center}
+.result{background:var(--pri);color:#fff;border-radius:14px;padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px}
+.result .num{font-size:32px}.result p{margin:0;font-size:13px;opacity:.85}
+.verdict{font-size:16px;font-weight:500;margin-top:10px}
+.note{background:var(--pri2);padding:12px 14px;border-radius:10px;font-size:14px;margin-top:10px}
+.empty{padding:28px;text-align:center;border:2px dashed var(--line);border-radius:14px;background:var(--card)}
+dialog{border:0;border-radius:16px;padding:20px;width:min(560px,94vw);max-height:90vh;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:#000a}
 .live{font:600 64px "Barlow Condensed",Inter,sans-serif;color:var(--pri);text-align:center;margin:10px 0}
-.note{background:var(--pri2);padding:12px 14px;border-radius:10px;font-size:14px;margin-top:12px}
-.empty{padding:30px;text-align:center;border:2px dashed var(--line);border-radius:12px}
-.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.cmp>div{background:var(--paper);padding:14px;border-radius:10px}
-.cmp .num{font-size:26px}
-.x{min-height:34px;padding:0 10px;font-size:13px}
+.hist{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.hist div span{display:block;font-size:13px;color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:10px;font-size:14px;z-index:9;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
 details summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
-@media(max-width:600px){.scale{grid-template-columns:minmax(0,1fr) 5em}.scale .track{grid-column:1/-1;order:3}.zl{grid-column:1/-1;order:4}table{font-size:13px}}
-@media(prefers-reduced-motion:reduce){.track em{transition:none}}
+@media(min-width:900px){body{padding-bottom:0}nav.bot{position:sticky;top:60px;inset:auto;grid-template-columns:repeat(5,auto);justify-content:center;gap:8px;border:0;border-bottom:1px solid var(--line)}nav.bot button{flex-direction:row;min-height:48px;font-size:14px;padding:0 16px;gap:8px}nav.bot button svg{width:20px;height:20px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.cols>.card{margin:0}}
+@media(max-width:600px){.scale{grid-template-columns:minmax(0,1fr) 5em}.scale .track{grid-column:1/-1;order:3}.zl{grid-column:1/-1;order:4}.site{grid-template-columns:minmax(0,1fr) repeat(3,3.6em) 3.2em}table{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
 </head>
 <body>
-<header class="band">
-  <div><h1>Composição corporal</h1><p class="mut" id="sync">Carregando dados…</p></div>
-  <div class="acts">
-    <button class="pri" id="bBle">Medir pela balança</button>
-    <button id="bAdd">Adicionar manual</button>
-    <label class="btn" style="display:inline-flex;align-items:center;color:var(--ink);font-size:15px" for="fCsv">Importar CSV do openScale</label>
-    <input type="file" id="fCsv" accept=".csv,text/csv" hidden>
-  </div>
-</header>
-
-<section class="band sheet" id="sheet"></section>
-<section class="band" id="recomp"></section>
-<section class="band" id="charts">
-  <h2>Evolução</h2>
-  <div class="tabs" id="tabs"></div>
-  <div class="fig"><svg id="chart" role="img" aria-label="Gráfico de evolução"></svg></div>
-  <p class="mut" id="chartNote"></p>
-</section>
-<section class="band" id="cross"></section>
-<section class="band">
-  <h2>Histórico</h2>
-  <div class="scroll"><table id="hist"></table></div>
-</section>
-<section class="band">
-  <h2>Seu perfil</h2>
-  <p class="mut">Os cálculos dependem destes dados. Ao mudar, todo o histórico é recalculado a partir da impedância.</p>
-  <form class="form" id="prof">
-    <label>Sexo<select id="pSex"><option value="1">Masculino</option><option value="0">Feminino</option></select></label>
-    <label>Data de nascimento<input type="date" id="pBirth" required></label>
-    <label>Altura (cm)<input type="number" id="pH" min="100" max="230" step="0.5" required></label>
-    <label>Nível de atividade<select id="pAct"><option value="1.2">Sedentário</option><option value="1.375">Leve (1–3x/sem)</option><option value="1.55" selected>Moderado (3–5x/sem)</option><option value="1.725">Alto (6–7x/sem)</option><option value="1.9">Muito alto</option></select></label>
-    <button class="pri" type="submit">Salvar perfil</button>
-  </form>
-  <details style="margin-top:20px"><summary>Como medir para ter dados confiáveis</summary>
-  <p>A bioimpedância muda com a hidratação. Para comparar dias, meça sempre do mesmo jeito: ao acordar, depois de ir ao banheiro, antes de comer e beber, descalço, com os pés secos e limpos, longe de treino e de banho quente. Olhe a média móvel e a tendência de semanas, não o número de um dia.</p></details>
-  <details><summary>Sobre o Bluetooth</summary>
-  <p>A balança OKOK não precisa de pareamento: ela anuncia peso e impedância pelo ar. O Chrome só lê esse anúncio com a opção experimental ligada (Android: abra <b>chrome://flags</b>, ative <b>Experimental Web Platform features</b> e reinicie). Se o botão não funcionar aqui, meça pelo openScale, exporte o CSV (Menu → Exportar) e importe nesta página: os cálculos são refeitos a partir da impedância.</p></details>
-</section>
-
+<header class="top"><h1>Avaliação Corporal</h1><button class="chip" id="curChip">Selecionar cliente</button></header>
+<nav class="bot" id="nav">
+  <button data-v="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.6c2.6-.3 4.8 1.2 5.5 4.4"/></svg>Clientes</button>
+  <button data-v="painel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7.5" height="9" rx="2"/><rect x="13.5" y="3" width="7.5" height="5" rx="2"/><rect x="3" y="15" width="7.5" height="6" rx="2"/><rect x="13.5" y="11" width="7.5" height="10" rx="2"/></svg>Painel</button>
+  <button data-v="avaliar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>Avaliar</button>
+  <button data-v="evolucao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18"/><path d="M4 16l5-5 4 3 7-8"/></svg>Evolução</button>
+  <button data-v="ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Ajustes</button>
+</nav>
+<main id="app"></main>
 <dialog id="dlg"></dialog>
+<div class="toast" id="toast" role="status"></div>
+<input type="file" id="fCsv" accept=".csv,text/csv" hidden>
+<input type="file" id="fBak" accept=".json,application/json" hidden>
 
 <script>
 {
 const $=s=>document.querySelector(s);
-const KEY='bia-state-v1';
-let S={profile:{sex:1,birth:'',h:0,act:1.55},items:[]};
-let db=null,docRef=null,chartMetric='w',saving=Promise.resolve();
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-const f=(v,d=1)=>v==null||isNaN(v)?'–':v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
-const dt=t=>new Date(t).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'2-digit'});
-const dth=t=>new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+const f=(v,d=1)=>v==null||!isFinite(v)?'–':v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sg=(v,d=1)=>v==null||!isFinite(v)?'–':(v>0?'+':'')+f(v,d);
+const dd=t=>new Date(t).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+const dh=t=>new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const nowLocal=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600)};
 
-function ageAt(t){const b=new Date(S.profile.birth+'T00:00');if(isNaN(b))return 30;const d=new Date(t);let a=d.getFullYear()-b.getFullYear();if(d.getMonth()<b.getMonth()||(d.getMonth()==b.getMonth()&&d.getDate()<b.getDate()))a--;return a}
+const KEY='bia-state-v1';
+const TAPE=[['pescoco','Pescoço'],['ombros','Ombros'],['torax','Tórax'],['cintura','Cintura'],['abdomen','Abdômen (umbigo)'],['quadril','Quadril'],['bracoD','Braço dir. relaxado'],['bracoE','Braço esq. relaxado'],['bracoCD','Braço dir. contraído'],['bracoCE','Braço esq. contraído'],['antebD','Antebraço dir.'],['antebE','Antebraço esq.'],['coxaD','Coxa dir.'],['coxaE','Coxa esq.'],['pantD','Panturrilha dir.'],['pantE','Panturrilha esq.']];
+const TL=Object.fromEntries(TAPE);
+const SITES={peitoral:'Peitoral',axilar:'Axilar média',triceps:'Tríceps',subescapular:'Subescapular',abdominal:'Abdominal',suprailiaca:'Supra-ilíaca',coxa:'Coxa'};
+const PROTO={jp7:{n:'Pollock 7 dobras',s:()=>Object.keys(SITES)},jp3:{n:'Pollock 3 dobras',s:sex=>sex==1?['peitoral','abdominal','coxa']:['triceps','suprailiaca','coxa']}};
 
-/* Fórmulas: equações do fabricante OKOK (portadas do openScale) + equações publicadas para comparação */
-function calc(it){
-  const {sex,h,act}=S.profile,w=it.w,r=it.r,a=ageAt(it.t),m=sex==1,hm=h/100,o={w,t:it.t,r,a};
-  o.bmi=w/(hm*hm);
-  o.mifflin=10*w+6.25*h-5*a+(m?5:-161);
-  o.deur=1.2*o.bmi+0.23*a-10.8*sex-5.4;
+let S={v:2,clients:[],cur:null};
+let view='clientes',sub='balanca',evMetric='w',evPeriod=0,q='';
+
+/* ---------- dados ---------- */
+function load(){
+  let j=null;try{j=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+  if(j&&j.clients){S=j}
+  else if(j&&(j.items||j.profile)){const p=j.profile||{};const c=newClient({name:'Meu perfil',sex:p.sex??1,birth:p.birth||'',h:p.h||0,act:p.act||1.55});c.items=j.items||[];S={v:2,clients:[c],cur:c.id};save()}
+  S.clients.forEach(c=>{c.items??=[];c.tapes??=[];c.skins??=[]});
+  if(!S.cur&&S.clients[0])S.cur=S.clients[0].id;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Não foi possível salvar neste navegador')}}
+function newClient(o){return{id:uid(),name:'',sex:1,birth:'',h:0,act:1.55,goal:'',phone:'',notes:'',created:Date.now(),items:[],tapes:[],skins:[],...o}}
+const cl=()=>S.clients.find(c=>c.id===S.cur)||null;
+function ageAt(c,t){const b=new Date(c.birth+'T00:00');if(isNaN(b))return 30;const d=new Date(t);let a=d.getFullYear()-b.getFullYear();if(d.getMonth()<b.getMonth()||(d.getMonth()==b.getMonth()&&d.getDate()<b.getDate()))a--;return a}
+const initials=n=>esc((n||'?').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase());
+
+/* ---------- cálculos ---------- */
+function bia(it,c){
+  const sex=+c.sex,h=+c.h,w=it.w,r=it.r,a=ageAt(c,it.t),m=sex==1,hm=h/100,o={t:it.t,w,r,a};
+  o.bmi=h?w/(hm*hm):null;o.mifflin=10*w+6.25*h-5*a+(m?5:-161);o.deur=o.bmi?1.2*o.bmi+0.23*a-10.8*sex-5.4:null;
   if(r>0&&h>0){
     const fmRaw=m?h*-0.3315+w*0.6216+a*0.0183+r*0.0085+22.554:h*-0.3332+w*0.7509+a*0.0196+r*0.0072+22.7193;
     o.bf=clamp(fmRaw/w*100,5,45);
-    let mm;if(o.bf>45)mm=w*0.95-4;else if(o.bf<5)mm=w*0.95-1;else mm=clamp(m?h*0.2867+w*0.3894-a*0.0408-r*0.01235-15.7665:h*0.3186+w*0.1934-a*0.0206-r*0.0132-16.4556,20,70);
+    const mm=o.bf>=45?w*0.95-4:o.bf<=5?w*0.95-1:clamp(m?h*0.2867+w*0.3894-a*0.0408-r*0.01235-15.7665:h*0.3186+w*0.1934-a*0.0206-r*0.0132-16.4556,20,70);
     o.smm=clamp(h*0.2573+w*0.1745-a*0.0161+sex*2.4269-r*0.017-20.2165,20,70);
     o.water=clamp((m?h*0.0939+w*0.3758-a*0.0032-r*0.006925+0.097:h*0.0877+w*0.2973-a*0.0128-r*0.00603+0.5175)/w*100,20,85);
     o.bone=clamp(w-fmRaw-mm,1,4);
@@ -139,204 +149,320 @@ function calc(it){
     o.prot=(mm-o.water/100*w)/w*100;
     o.mage=clamp(Math.trunc(m?h*-0.7471+w*0.9161+a*0.4184+r*0.0517+54.2267:h*-1.1165+w*1.5784+a*0.4615+r*0.0415+83.2548),18,80);
     o.janssen=(h*h/r)*0.401+sex*3.825-a*0.071+5.102;
-  } else if(it.bf>0){o.bf=it.bf}
-  if(o.bf!=null){o.fm=w*o.bf/100;o.lbm=w-o.fm;o.ffmi=o.lbm/(hm*hm);o.ffmiN=o.ffmi+6.1*(1.8-hm);o.katch=370+21.6*o.lbm;o.tdee=o.katch*act}
-  else o.tdee=o.mifflin*act;
+  } else if(it.bf>0)o.bf=it.bf;
+  if(o.bf!=null){o.fm=w*o.bf/100;o.lbm=w-o.fm;if(h){o.ffmi=o.lbm/(hm*hm);o.ffmiN=o.ffmi+6.1*(1.8-hm)}o.katch=370+21.6*o.lbm}
+  o.tdee=(o.katch||o.mifflin)*(+c.act||1.55);
   return o;
 }
-const rows=()=>S.items.slice().sort((a,b)=>a.t-b.t).map(calc);
-
-/* média móvel exponencial (meia-vida ~ 7 dias, considera intervalos irregulares) */
-function ema(list,k){let out=[],v=null,lt=0;for(const o of list){if(o[k]==null)continue;if(v==null)v=o[k];else{const days=(o.t-lt)/864e5,al=1-Math.pow(0.5,days/7);v=v+al*(o[k]-v)}lt=o.t;out.push([o.t,v])}return out}
-
-/* ---------- persistência ---------- */
-function loadLocal(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j)S=j}catch(e){}}
-function save(){
-  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
-  if(docRef){const snap=JSON.parse(JSON.stringify(S));saving=saving.then(()=>docRef.set(snap)).then(()=>setSync('Salvo na sua conta — disponível em qualquer aparelho.')).catch(e=>setSync('Não foi possível salvar na conta ('+(e&&e.code||'erro')+'). Dados mantidos neste navegador.'))}
+function tapeRow(e,c){
+  const o={t:e.t,...e.v},h=+c.h,waist=o.abdomen||o.cintura;
+  if(o.cintura&&o.quadril)o.rcq=o.cintura/o.quadril;
+  if(o.cintura&&h)o.rce=o.cintura/h;
+  if(h&&o.pescoco&&waist){
+    if(c.sex==1){if(waist>o.pescoco)o.navy=495/(1.0324-0.19077*Math.log10(waist-o.pescoco)+0.15456*Math.log10(h))-450}
+    else if(o.quadril)o.navy=495/(1.29579-0.35004*Math.log10(waist+o.quadril-o.pescoco)+0.221*Math.log10(h))-450;
+  }
+  return o;
 }
-const setSync=t=>$('#sync').textContent=t;
-
-/* ---------- render ---------- */
-function zoneBar(label,val,unit,dec,zones,min,max,colors){
-  const pos=v=>clamp((v-min)/(max-min)*100,0,100);let prev=min;
-  const segs=zones.map((z,i)=>{const wpc=pos(z[0])-pos(prev);prev=z[0];return`<i style="width:${wpc}%;background:${colors[i]}"></i>`}).join('');
-  prev=min;const labs=zones.map(z=>{const wpc=pos(z[0])-pos(prev);prev=z[0];return`<span style="width:${wpc}%">${z[1]}</span>`}).join('');
-  return`<div class="scale"><b>${label}</b><div class="track">${segs}${val!=null?`<em style="left:${pos(val)}%"></em>`:''}</div><span class="v">${f(val,dec)}${unit}</span><div class="zl">${labs}</div></div>`;
+const mean=a=>{const v=(a||[]).map(Number).filter(x=>x>0);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null};
+function skinRow(e,c){
+  const a=ageAt(c,e.t),sites=PROTO[e.proto].s(+c.sex),vals=sites.map(s=>mean(e.folds[s]));
+  const o={t:e.t,proto:e.proto,w:e.w,a,folds:Object.fromEntries(sites.map((s,i)=>[s,vals[i]]))};
+  if(vals.some(v=>v==null))return o;
+  const S_=vals.reduce((s,x)=>s+x,0);o.sum=S_;const m=c.sex==1;
+  const bd=e.proto==='jp7'?(m?1.112-0.00043499*S_+0.00000055*S_*S_-0.00028826*a:1.097-0.00046971*S_+0.00000056*S_*S_-0.00012828*a)
+                         :(m?1.10938-0.0008267*S_+0.0000016*S_*S_-0.0002574*a:1.0994921-0.0009929*S_+0.0000023*S_*S_-0.0001392*a);
+  o.bd=bd;o.sbf=495/bd-450;if(e.w){o.sfm=e.w*o.sbf/100;o.slbm=e.w-o.sfm}
+  return o;
 }
-const C=['var(--pri2)','color-mix(in srgb,var(--ok) 55%,transparent)','color-mix(in srgb,var(--warn) 55%,transparent)','color-mix(in srgb,var(--bad) 60%,transparent)'];
-function cell(v,d,u,lab,sub){return`<div class="cell"><div class="num">${f(v,d)}<small> ${u}</small></div><p>${lab}${sub?' · '+sub:''}</p></div>`}
-function bfClass(bf,m){const z=m?[[6,'essencial'],[14,'atlético'],[18,'fitness'],[25,'média'],[99,'alto']]:[[14,'essencial'],[21,'atlético'],[25,'fitness'],[32,'média'],[99,'alto']];return z.find(x=>bf<x[0])[1]}
+const byT=(a,b)=>a.t-b.t;
+const biaRows=c=>c.items.slice().sort(byT).map(i=>bia(i,c));
+const tapeRows=c=>c.tapes.slice().sort(byT).map(e=>tapeRow(e,c));
+const skinRows=c=>c.skins.slice().sort(byT).map(e=>skinRow(e,c));
+function ema(list,k){let out=[],v=null,lt=0;for(const o of list){if(o[k]==null)continue;if(v==null)v=o[k];else{const d=(o.t-lt)/864e5;v+=(1-Math.pow(0.5,d/7))*(o[k]-v)}lt=o.t;out.push([o.t,v])}return out}
+function latestWeight(c){const b=biaRows(c),s=skinRows(c).filter(x=>x.w);const cands=[b.at(-1),s.at(-1)].filter(Boolean);return cands.sort(byT).at(-1)?.w||null}
+const bfClass=(bf,m)=>(m?[[6,'essencial'],[14,'atlético'],[18,'fitness'],[25,'média'],[99,'alta']]:[[14,'essencial'],[21,'atlético'],[25,'fitness'],[32,'média'],[99,'alta']]).find(x=>bf<x[0])[1];
+
+/* ---------- navegação ---------- */
+function go(v,s){view=v;if(s)sub=s;history.replaceState(null,'','#'+v);render();window.scrollTo(0,0)}
+$('#nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b.dataset.v)});
+$('#curChip').onclick=()=>go('clientes');
 
 function render(){
-  const R=rows(),L=R[R.length-1],P=S.profile,m=P.sex==1;
-  const needProf=!P.birth||!P.h;
-  if(!L){$('#sheet').innerHTML=`<div class="empty"><h2>Nenhuma medição ainda</h2><p>${needProf?'Comece preenchendo seu perfil lá embaixo. Depois ':''}suba na balança com o botão <b>Medir pela balança</b>, importe o CSV do openScale ou adicione manualmente.</p></div>`;['#recomp','#cross'].forEach(s=>$(s).innerHTML='');$('#hist').innerHTML='';drawChart();return}
-  const prev=R.length>1?R[R.length-2]:null,dW=prev?L.w-prev.w:null;
-  const hm=P.h/100,wLo=18.5*hm*hm,wHi=24.9*hm*hm,wMin=Math.min(wLo*0.8,L.w-5),wMax=Math.max(30*hm*hm*1.1,L.w+5);
-  const bfZ=m?[[6,'essencial'],[14,'atlético'],[18,'fitness'],[25,'média'],[45,'alto']]:[[14,'essencial'],[21,'atlético'],[25,'fitness'],[32,'média'],[50,'alto']];
-  $('#sheet').innerHTML=`
-  <div class="sheethead"><div><h2>Folha de resultado</h2><p class="mut">${dth(L.t)} · ${L.a} anos · ${f(P.h,0)} cm${L.r?` · impedância ${f(L.r,1)} Ω`:''}</p></div>
-  <div><div class="num big">${f(L.w,1)}<small> kg</small></div>${dW!=null?`<div class="delta" style="color:${dW<=0?'var(--ok)':'var(--warn)'}">${dW>0?'+':''}${f(dW,1)} kg desde a última</div>`:''}</div></div>
-  ${zoneBar('Peso',L.w,' kg',1,[[wLo,'abaixo'],[wHi,'saudável (IMC)'],[30*hm*hm,'sobrepeso'],[wMax,'obesidade']],wMin,wMax,C)}
-  ${zoneBar('Gordura corporal',L.bf,'%',1,bfZ,2,m?40:48,[C[0],C[1],C[1],C[2],C[3]])}
-  ${L.visc!=null?zoneBar('Gordura visceral',L.visc,'',0,[[10,'normal'],[15,'alta'],[30,'muito alta']],1,30,[C[1],C[2],C[3]]):''}
-  <div class="grid">
-    ${cell(L.fm,1,'kg','Massa gorda')}
-    ${cell(L.lbm,1,'kg','Massa magra','tudo que não é gordura')}
-    ${cell(L.smm,1,'kg','Músculo esquelético',L.smm?f(L.smm/L.w*100,0)+'% do peso':'')}
-    ${cell(L.bmi,1,'','IMC')}
-    ${cell(L.ffmi,1,'','FFMI',L.ffmiN?'ajustado '+f(L.ffmiN,1):'')}
-    ${cell(L.water,1,'%','Água corporal')}
-    ${cell(L.prot,1,'%','Proteína')}
-    ${cell(L.bone,1,'kg','Massa óssea')}
-    ${cell(L.katch||L.mifflin,0,'kcal','Metabolismo basal',L.katch?'Katch-McArdle':'Mifflin-St Jeor')}
-    ${cell(L.tdee,0,'kcal','Gasto diário estimado','com sua atividade')}
-    ${cell(L.mage,0,'anos','Idade metabólica','estimativa do fabricante')}
-    ${cell(L.lbm?L.lbm*1.6:null,0,'–'+f(L.lbm?L.lbm*2.2:null,0)+' g','Proteína/dia sugerida','1,6–2,2 g/kg magra')}
-  </div>
-  ${L.bf!=null?`<p class="mut" style="margin-top:10px">Gordura na faixa <b>${bfClass(L.bf,m)}</b> (classificação ACE). ${needProf?'<b>Complete o perfil para cálculos corretos.</b>':''}</p>`:'<p class="note">Sem impedância nesta medição: só peso e IMC. Meça pela balança ou importe do openScale para ter a composição completa.</p>'}`;
-  renderRecomp(R);renderCross(L,m);renderHist(R);drawChart();
+  const c=cl();
+  document.querySelectorAll('#nav button').forEach(b=>{if(b.dataset.v===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  $('#curChip').textContent=c?c.name:'Selecionar cliente';
+  if(!c&&!['clientes','ajustes'].includes(view))view='clientes';
+  ({clientes:vClientes,painel:vPainel,avaliar:vAvaliar,evolucao:vEvolucao,ajustes:vAjustes})[view](c);
 }
 
-function renderRecomp(R){
-  const comp=R.filter(o=>o.fm!=null);
-  if(comp.length<3){$('#recomp').innerHTML=`<h2>Recomposição</h2><p class="mut">Com pelo menos 3 medições com impedância aparece aqui quanto mudou de gordura e de massa magra.</p>`;return}
-  const last=comp[comp.length-1],from=last.t-30*864e5,win=comp.filter(o=>o.t>=from),base=win.length>=2?win:comp.slice(-5);
-  const fmT=ema(base,'fm'),lbT=ema(base,'lbm'),wT=ema(base,'w');
-  const d=a=>a[a.length-1][1]-a[0][1],days=Math.max(1,(base[base.length-1].t-base[0].t)/864e5);
-  const dF=d(fmT),dL=d(lbT),dWw=d(wT),wk=dWw/days*7,pct=wk/base[0].w*100;
-  let v;
-  if(dF<-0.2&&dL>=-0.2)v='Recomposição: você está perdendo gordura e mantendo ou ganhando massa magra. É o melhor cenário.';
-  else if(dF<-0.2&&dL<-0.2)v=`Perdendo peso, mas ${f(Math.abs(dL)/(Math.abs(dF)+Math.abs(dL))*100,0)}% da perda é massa magra. Se for déficit calórico, vale subir a proteína e manter o treino pesado.`;
-  else if(dF>0.2&&dL>0.2)v=`Ganhando peso com ${f(dL/(dF+dL)*100,0)}% de massa magra. Fase de ganho; para ganho mais limpo, mire ~0,25–0,5% do peso por semana.`;
-  else if(dF>0.2)v='A gordura está subindo sem ganho de massa magra. Reveja calorias e treino.';
-  else v='Composição estável no período.';
-  $('#recomp').innerHTML=`<h2>Recomposição · últimos ${f(days,0)} dias</h2><p class="mut">Calculado sobre a tendência (média móvel), não sobre medições isoladas.</p>
-  <div class="recomp">
-   <div><div class="num" style="font-size:34px">${dWw>0?'+':''}${f(dWw,1)} kg</div><p class="mut">Peso · ${wk>0?'+':''}${f(wk,2)} kg/sem (${f(pct,2)}%)</p></div>
-   <div><div class="num" style="font-size:34px;color:${dF<=0?'var(--ok)':'var(--warn)'}">${dF>0?'+':''}${f(dF,1)} kg</div><p class="mut">Massa gorda</p></div>
-   <div><div class="num" style="font-size:34px;color:${dL>=0?'var(--ok)':'var(--warn)'}">${dL>0?'+':''}${f(dL,1)} kg</div><p class="mut">Massa magra</p></div>
-  </div><p class="verdict">${v}</p>`;
+/* ---------- Clientes ---------- */
+function vClientes(c){
+  const list=S.clients.filter(x=>x.name.toLowerCase().includes(q.toLowerCase())).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+  $('#app').innerHTML=`<div class="row between" style="margin-bottom:12px"><h2>Clientes <span class="mut" style="font:500 15px Inter">${S.clients.length}</span></h2><button class="pri" id="bNew">+ Novo cliente</button></div>
+  ${S.clients.length>4?`<input id="q" type="search" placeholder="Buscar cliente" value="${esc(q)}" style="margin-bottom:12px">`:''}
+  <div id="clist">${S.clients.length?list.map(x=>{const b=biaRows(x).at(-1),s=skinRows(x).at(-1),last=[...x.items,...x.tapes,...x.skins].map(i=>i.t).sort().at(-1);
+    const bf=b?.bf??s?.sbf;return`<button class="client" data-c="${x.id}" aria-current="${x.id===S.cur}"><span class="av">${initials(x.name)}</span><span class="meta"><b>${esc(x.name)}</b><span>${x.birth?ageAt(x,Date.now())+' anos · ':''}${last?'última avaliação '+dd(last):'sem avaliações'}</span></span><span style="text-align:right"><span class="num" style="font-size:22px">${b?f(b.w,1)+' kg':''}</span><br><span class="mut">${bf!=null?f(bf,1)+'% gordura':''}</span></span></button>`}).join('')
+    :`<div class="empty"><h2>Nenhum cliente ainda</h2><p class="mut">Cadastre o primeiro cliente para começar as avaliações.</p></div>`}</div>`;
+  $('#bNew').onclick=()=>clientForm();
+  $('#q')?.addEventListener('input',e=>{q=e.target.value;const p=e.target.selectionStart;vClientes(cl());const n=$('#q');n.focus();n.setSelectionRange(p,p)});
+  $('#clist').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;S.cur=b.dataset.c;save();go('painel')};
+}
+function clientForm(edit){
+  const x=edit||newClient({});
+  openDlg(`<h2>${edit?'Editar cliente':'Novo cliente'}</h2><form id="cf" class="form" style="grid-template-columns:1fr 1fr;margin-top:10px">
+  <label style="grid-column:1/-1">Nome<input id="cN" required value="${esc(x.name)}" autocomplete="off"></label>
+  <label>Sexo<select id="cS"><option value="1">Masculino</option><option value="0">Feminino</option></select></label>
+  <label>Nascimento<input type="date" id="cB" required value="${esc(x.birth)}"></label>
+  <label>Altura (cm)<input type="number" id="cH" min="100" max="230" step="0.5" required value="${x.h||''}"></label>
+  <label>Atividade<select id="cA"><option value="1.2">Sedentário</option><option value="1.375">Leve (1–3x/sem)</option><option value="1.55">Moderada (3–5x/sem)</option><option value="1.725">Alta (6–7x/sem)</option><option value="1.9">Muito alta</option></select></label>
+  <label>Objetivo<select id="cG"><option value="">—</option><option>Emagrecimento</option><option>Hipertrofia</option><option>Recomposição</option><option>Saúde</option><option>Performance</option></select></label>
+  <label>Telefone<input id="cP" inputmode="tel" value="${esc(x.phone)}"></label>
+  <label style="grid-column:1/-1">Observações<textarea id="cO">${esc(x.notes)}</textarea></label>
+  <div class="row" style="grid-column:1/-1;justify-content:space-between">${edit?'<button type="button" class="danger ghost" id="cDel">Excluir cliente</button>':'<span></span>'}<span class="row"><button type="button" id="cCancel">Cancelar</button><button class="pri" type="submit">Salvar</button></span></div></form>`,true);
+  $('#cS').value=String(x.sex);$('#cA').value=String(x.act);$('#cG').value=x.goal||'';
+  $('#cCancel').onclick=()=>dlg.close();
+  $('#cf').onsubmit=e=>{e.preventDefault();Object.assign(x,{name:$('#cN').value.trim(),sex:+$('#cS').value,birth:$('#cB').value,h:+$('#cH').value,act:+$('#cA').value,goal:$('#cG').value,phone:$('#cP').value.trim(),notes:$('#cO').value});
+    if(!edit)S.clients.push(x);S.cur=x.id;save();dlg.close();toast(edit?'Cliente atualizado':'Cliente cadastrado');go(edit?view:'painel')};
+  $('#cDel')?.addEventListener('click',e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Toque de novo para excluir tudo';return}
+    S.clients=S.clients.filter(y=>y.id!==x.id);S.cur=S.clients[0]?.id||null;save();dlg.close();toast('Cliente excluído');go('clientes')});
 }
 
-function renderCross(L,m){
-  if(L.r==null){$('#cross').innerHTML='';return}
-  $('#cross').innerHTML=`<h2>Validação cruzada</h2><p class="mut">Bioimpedância de balança é uma estimativa. Comparar equações diferentes mostra a margem de incerteza.</p>
-  <div class="cmp">
-   <div><b>Gordura corporal</b><p><span class="num">${f(L.bf,1)}%</span> <span class="mut">fabricante (impedância)</span></p><p><span class="num">${f(L.deur,1)}%</span> <span class="mut">Deurenberg (IMC + idade)</span></p><p class="mut">Em quem treina, a fórmula por IMC costuma superestimar a gordura.</p></div>
-   <div><b>Músculo esquelético</b><p><span class="num">${f(L.smm,1)} kg</span> <span class="mut">fabricante</span></p><p><span class="num">${f(L.janssen,1)} kg</span> <span class="mut">Janssen 2000 (validada contra ressonância)</span></p></div>
-   <div><b>FFMI</b><p><span class="num">${f(L.ffmiN,1)}</span> <span class="mut">ajustado à altura</span></p><p class="mut">${m?'Referência masculina: ~18–20 média, 20–22 treinado, 22–25 avançado.':'Referência feminina: ~14–16 média, 16–18 treinada, 18–21 avançada.'}</p></div>
-  </div>`;
+/* ---------- Painel ---------- */
+function kpi(v,d,u,lab,delta,inv){const cls=delta==null||Math.abs(delta)<1e-9?'flat':(delta>0)!==!!inv?'up':'down';return`<div class="kpi"><div class="num">${f(v,d)}<small> ${u}</small></div><p>${lab}${delta!=null?` · <span class="${cls}">${sg(delta,d)}</span>`:''}</p></div>`}
+function vPainel(c){
+  const B=biaRows(c),T=tapeRows(c),K=skinRows(c).filter(x=>x.sbf!=null),b=B.at(-1),b0=B[0],t=T.at(-1),t0=T[0],k=K.at(-1),k0=K[0];
+  const age=c.birth?ageAt(c,Date.now()):null,none=!B.length&&!T.length&&!K.length;
+  let html=`<div class="card"><div class="row between"><div class="row" style="gap:12px"><span class="av" style="width:52px;height:52px;font-size:19px">${initials(c.name)}</span><div><h2 style="margin:0">${esc(c.name)}</h2><p class="mut">${c.sex==1?'Masculino':'Feminino'}${age!=null?' · '+age+' anos':''}${c.h?' · '+f(c.h,0)+' cm':''}${c.goal?' · '+esc(c.goal):''}</p></div></div>
+  <div class="row"><button class="sm" id="pEdit">Editar</button><button class="sm pri" id="pRep">Enviar relatório</button></div></div>${c.notes?`<p class="mut" style="margin-top:8px">${esc(c.notes)}</p>`:''}</div>`;
+  if(none){$('#app').innerHTML=html+`<div class="empty"><h2>Nenhuma avaliação ainda</h2><p class="mut">Faça a primeira avaliação: balança, perimetria ou dobras.</p><button class="pri" id="pGo" style="margin-top:10px">Nova avaliação</button></div>`;bindPainel(c);return}
+  html+=`<div class="card"><div class="row between"><h3>Resumo atual</h3><button class="sm" id="pGo">+ Nova avaliação</button></div><div class="kpis">
+    ${b?kpi(b.w,1,'kg','Peso',B.length>1?b.w-b0.w:null):''}
+    ${b?.bf!=null?kpi(b.bf,1,'%','Gordura · balança',B.length>1&&b0.bf!=null?b.bf-b0.bf:null):''}
+    ${k?kpi(k.sbf,1,'%','Gordura · dobras',K.length>1?k.sbf-k0.sbf:null):''}
+    ${t?.navy!=null?kpi(t.navy,1,'%','Gordura · fita (Marinha)'):''}
+    ${b?.lbm!=null?kpi(b.lbm,1,'kg','Massa magra',B.length>1&&b0.lbm!=null?b.lbm-b0.lbm:null,true):''}
+    ${b?.smm!=null?kpi(b.smm,1,'kg','Músculo esquelético',B.length>1&&b0.smm!=null?b.smm-b0.smm:null,true):''}
+    ${t?.cintura?kpi(t.cintura,1,'cm','Cintura',T.length>1&&t0.cintura?t.cintura-t0.cintura:null):''}
+    ${t?.rce?kpi(t.rce,2,'','Cintura/altura'):''}
+    ${b?.ffmiN!=null?kpi(b.ffmiN,1,'','FFMI ajustado'):''}
+    ${b?kpi(b.tdee,0,'kcal','Gasto diário est.'):''}
+  </div><p class="mut" style="margin-top:8px">Variação desde a primeira avaliação. ${b?.bf!=null?`Gordura (balança) na faixa <b>${bfClass(b.bf,c.sex==1)}</b>.`:''}</p></div>`;
+  html+=recompCard(B);
+  html+=compareCard(c,B,T,K);
+  $('#app').innerHTML=html;bindPainel(c);
+}
+function bindPainel(c){$('#pEdit').onclick=()=>clientForm(c);$('#pRep').onclick=()=>report(c);$('#pGo').onclick=()=>go('avaliar')}
+function recompCard(B){
+  const comp=B.filter(o=>o.fm!=null);if(comp.length<3)return'';
+  const last=comp.at(-1),win=comp.filter(o=>o.t>=last.t-30*864e5),base=win.length>=2?win:comp.slice(-5);
+  const fT=ema(base,'fm'),lT=ema(base,'lbm'),wT=ema(base,'w'),d=a=>a.at(-1)[1]-a[0][1],days=Math.max(1,(base.at(-1).t-base[0].t)/864e5);
+  const dF=d(fT),dL=d(lT),dW=d(wT),wk=dW/days*7;let v;
+  if(dF<-0.2&&dL>=-0.2)v='Recomposição: perdendo gordura e mantendo ou ganhando massa magra.';
+  else if(dF<-0.2)v=`Perdendo peso, mas ${f(Math.abs(dL)/(Math.abs(dF)+Math.abs(dL))*100,0)}% da perda é massa magra. Revise proteína e estímulo de força.`;
+  else if(dF>0.2&&dL>0.2)v=`Ganhando peso com ${f(dL/(dF+dL)*100,0)}% de massa magra.`;
+  else if(dF>0.2)v='Gordura subindo sem ganho de massa magra.';else v='Composição estável no período.';
+  return`<div class="card"><h3>Recomposição · últimos ${f(days,0)} dias (balança)</h3><div class="kpis">${kpi(dW,1,'kg','Peso · '+sg(wk,2)+' kg/sem')}${kpi(dF,1,'kg','Massa gorda')}${kpi(dL,1,'kg','Massa magra')}</div><p class="verdict">${v}</p><p class="mut">Calculado sobre a tendência (média móvel), não sobre medições isoladas.</p></div>`;
+}
+function compareCard(c,B,T,K){
+  const rows=[];const add=(lab,a,b,d,u)=>{if(a!=null&&b!=null)rows.push([lab,a,b,d,u])};
+  if(B.length>1){const a=B[0],b=B.at(-1);add('Peso',a.w,b.w,1,'kg');add('Gordura (balança)',a.bf,b.bf,1,'%');add('Massa gorda',a.fm,b.fm,1,'kg');add('Massa magra',a.lbm,b.lbm,1,'kg');add('Músculo esquelético',a.smm,b.smm,1,'kg');add('Gordura visceral',a.visc,b.visc,0,'')}
+  if(K.length>1){const a=K[0],b=K.at(-1);add('Gordura (dobras)',a.sbf,b.sbf,1,'%');add('Soma das dobras',a.sum,b.sum,1,'mm')}
+  if(T.length>1){const a=T[0],b=T.at(-1);['cintura','abdomen','quadril','torax','bracoCD','coxaD'].forEach(k=>add(TL[k],a[k],b[k],1,'cm'))}
+  if(!rows.length)return'';
+  return`<div class="card"><h3>Primeira × última avaliação</h3><div class="scroll"><table><thead><tr><th>Medida</th><th>Primeira</th><th>Última</th><th>Diferença</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${f(r[1],r[3])} ${r[4]}</td><td>${f(r[2],r[3])} ${r[4]}</td><td><b>${sg(r[2]-r[1],r[3])}</b></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function report(c){
+  const B=biaRows(c),T=tapeRows(c),K=skinRows(c).filter(x=>x.sbf!=null),b=B.at(-1),b0=B[0],t=T.at(-1),t0=T[0],k=K.at(-1),k0=K[0];
+  const L=[`*Avaliação corporal — ${c.name}*`,`Data: ${dd(Date.now())}`,''];
+  const dl=(a,b,d,u)=>a!==undefined&&a!=null&&b!==a?` (${sg(b-a,d)} ${u} desde ${dd(B[0]?.t||Date.now())})`:'';
+  if(b){L.push('*Balança (bioimpedância)*',`Peso: ${f(b.w,1)} kg${B.length>1?` (${sg(b.w-b0.w,1)} kg)`:''}`);if(b.bf!=null)L.push(`Gordura: ${f(b.bf,1)}%${B.length>1&&b0.bf!=null?` (${sg(b.bf-b0.bf,1)} pts)`:''}`,`Massa gorda: ${f(b.fm,1)} kg · Massa magra: ${f(b.lbm,1)} kg`);if(b.smm!=null)L.push(`Músculo esquelético: ${f(b.smm,1)} kg · Visceral: ${f(b.visc,0)}`);L.push('')}
+  if(k){L.push(`*Dobras cutâneas (${PROTO[k.proto].n})*`,`Gordura: ${f(k.sbf,1)}%${K.length>1?` (${sg(k.sbf-k0.sbf,1)} pts)`:''} · Soma: ${f(k.sum,1)} mm`,'')}
+  if(t){L.push('*Perimetria*');TAPE.forEach(([key,lab])=>{if(t[key])L.push(`${lab}: ${f(t[key],1)} cm${T.length>1&&t0[key]?` (${sg(t[key]-t0[key],1)})`:''}`)});if(t.rce)L.push(`Relação cintura/altura: ${f(t.rce,2)}`);L.push('')}
+  L.push('Variações em relação à primeira avaliação.');
+  const txt=L.join('\n'),wa=c.phone?'https://wa.me/'+c.phone.replace(/\D/g,'').replace(/^(?!55)/,'55')+'?text='+encodeURIComponent(txt):'https://wa.me/?text='+encodeURIComponent(txt);
+  openDlg(`<h2>Relatório</h2><textarea id="rT" style="min-height:260px;font-size:14px">${esc(txt)}</textarea><div class="row" style="margin-top:10px"><a class="btn pri" href="${esc(wa)}" target="_blank" rel="noopener">Enviar no WhatsApp</a><button id="rC">Copiar</button>${navigator.share?'<button id="rS">Compartilhar</button>':''}</div>`);
+  $('#rC').onclick=()=>navigator.clipboard.writeText($('#rT').value).then(()=>toast('Relatório copiado'),()=>toast('Selecione e copie o texto'));
+  $('#rS')?.addEventListener('click',()=>navigator.share({text:$('#rT').value}).catch(()=>{}));
 }
 
-function renderHist(R){
-  const list=R.slice().reverse();
-  $('#hist').innerHTML=`<thead><tr><th>Data</th><th>Peso</th><th>Gordura</th><th>M. gorda</th><th>M. magra</th><th>Músculo</th><th>Água</th><th>Visceral</th><th>Ω</th><th></th></tr></thead><tbody>`+
-   list.map(o=>`<tr><td>${dth(o.t)}</td><td>${f(o.w,1)}</td><td>${f(o.bf,1)}%</td><td>${f(o.fm,1)}</td><td>${f(o.lbm,1)}</td><td>${f(o.smm,1)}</td><td>${f(o.water,1)}%</td><td>${f(o.visc,0)}</td><td>${f(o.r,0)}</td><td><button class="x" data-del="${o.t}" aria-label="Apagar medição">Apagar</button></td></tr>`).join('')+'</tbody>';
+/* ---------- Avaliar ---------- */
+function vAvaliar(c){
+  $('#app').innerHTML=`<div class="seg" role="tablist">${[['balanca','Balança'],['perimetria','Perimetria'],['dobras','Dobras']].map(([k,n])=>`<button data-s="${k}" aria-pressed="${sub===k}">${n}</button>`).join('')}</div><div id="sub"></div>`;
+  document.querySelector('.seg').onclick=e=>{const b=e.target.closest('button');if(b){sub=b.dataset.s;vAvaliar(c)}};
+  ({balanca:sBalanca,perimetria:sPerimetria,dobras:sDobras})[sub](c);
+}
+function zoneBar(label,val,unit,dec,zones,min,max,colors){
+  const pos=v=>clamp((v-min)/(max-min)*100,0,100);let p=min;
+  const segs=zones.map((z,i)=>{const w=pos(z[0])-pos(p);p=z[0];return`<i style="width:${w}%;background:${colors[i]}"></i>`}).join('');p=min;
+  const labs=zones.map(z=>{const w=pos(z[0])-pos(p);p=z[0];return`<span style="width:${w}%">${z[1]}</span>`}).join('');
+  return`<div class="scale"><b>${label}</b><div class="track">${segs}${val!=null?`<em style="left:${pos(val)}%"></em>`:''}</div><span class="v">${f(val,dec)}${unit}</span><div class="zl">${labs}</div></div>`;
+}
+const ZC=['var(--pri2)','color-mix(in srgb,var(--ok) 55%,transparent)','color-mix(in srgb,var(--c2) 55%,transparent)','color-mix(in srgb,var(--bad) 60%,transparent)'];
+function sBalanca(c){
+  const B=biaRows(c),L=B.at(-1),m=c.sex==1,hm=c.h/100;
+  let h=`<div class="card"><div class="row"><button class="pri" id="bBle">Medir pela balança</button><button id="bMan">Adicionar manual</button><button id="bCsv">Importar CSV (openScale)</button></div></div>`;
+  if(L){const prev=B.at(-2),wLo=18.5*hm*hm,wHi=24.9*hm*hm,wOb=30*hm*hm,wMin=Math.min(wLo*0.8,L.w-5),wMax=Math.max(wOb*1.1,L.w+5);
+    const bfZ=m?[[6,'essencial'],[14,'atlético'],[18,'fitness'],[25,'média'],[45,'alta']]:[[14,'essencial'],[21,'atlético'],[25,'fitness'],[32,'média'],[50,'alta']];
+    h+=`<div class="card"><div class="row between" style="align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:6px"><div><h3 style="margin:0">Folha de resultado</h3><p class="mut">${dh(L.t)}${L.r?' · impedância '+f(L.r,1)+' Ω':''}</p></div><div style="text-align:right"><div class="num big">${f(L.w,1)}<small> kg</small></div>${prev?`<span class="${L.w-prev.w>0?'up':'down'}" style="font-weight:600;font-size:14px">${sg(L.w-prev.w,1)} kg desde a anterior</span>`:''}</div></div>
+    ${c.h?zoneBar('Peso',L.w,' kg',1,[[wLo,'abaixo'],[wHi,'saudável'],[wOb,'sobrepeso'],[wMax,'obesidade']],wMin,wMax,ZC):''}
+    ${L.bf!=null?zoneBar('Gordura corporal',L.bf,'%',1,bfZ,2,m?40:48,[ZC[0],ZC[1],ZC[1],ZC[2],ZC[3]]):''}
+    ${L.visc!=null?zoneBar('Gordura visceral',L.visc,'',0,[[10,'normal'],[15,'alta'],[30,'muito alta']],1,30,[ZC[1],ZC[2],ZC[3]]):''}
+    <div class="kpis" style="margin-top:12px">${kpi(L.fm,1,'kg','Massa gorda')}${kpi(L.lbm,1,'kg','Massa magra')}${kpi(L.smm,1,'kg','Músculo esquelético')}${kpi(L.bmi,1,'','IMC')}${kpi(L.water,1,'%','Água')}${kpi(L.prot,1,'%','Proteína')}${kpi(L.bone,1,'kg','Massa óssea')}${kpi(L.katch||L.mifflin,0,'kcal','Metabolismo basal')}${kpi(L.ffmiN,1,'','FFMI ajustado')}${kpi(L.mage,0,'anos','Idade metabólica')}</div>
+    ${L.r==null?'<p class="note">Sem impedância nesta medição: composição limitada.</p>':''}</div>`;
+    if(L.r!=null)h+=`<div class="card"><h3>Validação cruzada</h3><div class="kpis">${kpi(L.bf,1,'%','Gordura · fabricante')}${kpi(L.deur,1,'%','Gordura · Deurenberg (IMC)')}${kpi(L.smm,1,'kg','Músculo · fabricante')}${kpi(L.janssen,1,'kg','Músculo · Janssen')}</div><p class="mut" style="margin-top:8px">Equações diferentes mostram a margem de incerteza da bioimpedância. Em quem treina, a fórmula pelo IMC tende a superestimar a gordura.</p></div>`;
+  } else h+=`<div class="empty"><h2>Sem medições de balança</h2><p class="mut">Use os botões acima para registrar.</p></div>`;
+  if(B.length)h+=`<div class="card"><h3>Histórico</h3><div class="scroll"><table><thead><tr><th>Data</th><th>Peso</th><th>Gordura</th><th>M. magra</th><th>Músculo</th><th>Visceral</th><th>Ω</th><th></th></tr></thead><tbody>${B.slice().reverse().map(o=>`<tr><td>${dh(o.t)}</td><td>${f(o.w,1)}</td><td>${f(o.bf,1)}%</td><td>${f(o.lbm,1)}</td><td>${f(o.smm,1)}</td><td>${f(o.visc,0)}</td><td>${f(o.r,0)}</td><td><button class="sm ghost danger" data-del="items|${o.t}">Apagar</button></td></tr>`).join('')}</tbody></table></div></div>`;
+  $('#sub').innerHTML=h;
+  $('#bBle').onclick=()=>ble(c);$('#bCsv').onclick=()=>$('#fCsv').click();
+  $('#bMan').onclick=()=>{openDlg(`<h2>Medição manual</h2><form id="mf" class="form" style="grid-template-columns:1fr 1fr;margin-top:10px"><label style="grid-column:1/-1">Data e hora<input type="datetime-local" id="mT" value="${nowLocal()}" required></label><label>Peso (kg)<input type="number" id="mW" step="0.05" required></label><label>Impedância (Ω)<input type="number" id="mR" step="0.1" placeholder="opcional"></label><label>ou % gordura<input type="number" id="mB" step="0.1" placeholder="opcional"></label><button class="pri" type="submit">Salvar</button></form>`);
+    $('#mf').onsubmit=e=>{e.preventDefault();const it={t:new Date($('#mT').value).getTime(),w:+$('#mW').value,src:'manual'};if(+$('#mR').value)it.r=+$('#mR').value;else if(+$('#mB').value)it.bf=+$('#mB').value;addItem(c,it);save();dlg.close();toast('Medição salva');render()}};
+}
+function addItem(c,it){if(!(it.w>10&&it.w<400)||isNaN(it.t))return false;if(c.items.some(i=>Math.abs(i.t-it.t)<60000))return false;c.items.push(it);return true}
+
+function sPerimetria(c){
+  const T=tapeRows(c),last=T.at(-1),prev=T.at(-2),first=T[0];
+  let h=`<div class="card"><h3>Nova perimetria</h3><p class="mut">Em centímetros. Os campos mostram a última medida em cinza; deixe vazio o que não medir.</p>
+  <form id="tf" class="form" style="margin-top:10px"><label style="grid-column:1/-1;max-width:260px">Data<input type="datetime-local" id="tT" value="${nowLocal()}" required></label>
+  ${TAPE.map(([k,n])=>`<label>${n}<input type="number" step="0.1" min="0" inputmode="decimal" data-k="${k}" placeholder="${last?.[k]?f(last[k],1):''}"></label>`).join('')}
+  <button class="pri" type="submit">Salvar perimetria</button></form></div>`;
+  if(last){
+    h+=`<div class="card"><h3>Última perimetria · ${dd(last.t)}</h3><div class="scroll"><table><thead><tr><th>Medida</th><th>Atual</th><th>Δ anterior</th><th>Δ primeira</th></tr></thead><tbody>${TAPE.filter(([k])=>last[k]).map(([k,n])=>`<tr><td>${n}</td><td>${f(last[k],1)} cm</td><td>${prev?.[k]?sg(last[k]-prev[k],1):'–'}</td><td>${T.length>1&&first[k]?sg(last[k]-first[k],1):'–'}</td></tr>`).join('')}</tbody></table></div>
+    <div class="kpis" style="margin-top:12px">${last.rcq?kpi(last.rcq,2,'','Cintura/quadril'):''}${last.rce?kpi(last.rce,2,'','Cintura/altura'):''}${last.navy!=null?kpi(last.navy,1,'%','Gordura · Marinha EUA'):''}${last.bracoCD&&last.bracoCE?kpi(last.bracoCD-last.bracoCE,1,'cm','Assimetria braços (D−E)'):''}${last.coxaD&&last.coxaE?kpi(last.coxaD-last.coxaE,1,'cm','Assimetria coxas (D−E)'):''}</div>
+    <p class="mut" style="margin-top:8px">Cintura/altura abaixo de 0,50 é a referência de baixo risco. A fórmula da Marinha usa pescoço, abdômen${c.sex==1?'':' e quadril'} e altura.</p></div>
+    <div class="card"><h3>Histórico</h3>${T.slice().reverse().map(o=>`<div class="hist"><div><b>${dh(o.t)}</b><span>${TAPE.filter(([k])=>o[k]).length} medidas${o.cintura?' · cintura '+f(o.cintura,1):''}${o.navy!=null?' · '+f(o.navy,1)+'% (Marinha)':''}</span></div><button class="sm ghost danger" data-del="tapes|${o.t}">Apagar</button></div>`).join('')}</div>`;
+  }
+  $('#sub').innerHTML=h;
+  $('#tf').onsubmit=e=>{e.preventDefault();const v={};document.querySelectorAll('#tf [data-k]').forEach(i=>{if(+i.value>0)v[i.dataset.k]=+i.value});
+    if(!Object.keys(v).length){toast('Preencha ao menos uma medida');return}c.tapes.push({t:new Date($('#tT').value).getTime(),v});save();toast('Perimetria salva');sPerimetria(c)};
 }
 
-/* ---------- gráfico ---------- */
-const MET={w:['Peso','kg'],fm:['Massa gorda','kg'],lbm:['Massa magra','kg'],bf:['Gordura','%'],smm:['Músculo','kg'],water:['Água','%'],visc:['Visceral',''],ffmiN:['FFMI','']};
-$('#tabs').innerHTML=Object.entries(MET).map(([k,v])=>`<button data-m="${k}" aria-pressed="${k==chartMetric}">${v[0]}</button>`).join('');
-$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;chartMetric=b.dataset.m;document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-pressed',x==b));drawChart()});
-const svg=$('#chart');
-function drawChart(){
-  const W=svg.clientWidth,H=svg.clientHeight;if(!W)return;
-  const R=rows().filter(o=>o[chartMetric]!=null),k=chartMetric;
-  if(R.length<2){svg.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="var(--mut)" font-size="14">Precisa de 2 medições ou mais</text>`;$('#chartNote').textContent='';return}
-  const tr=ema(R,k),narrow=W<520,pl=narrow?36:46,pr=12,pt=14,pb=28;
-  const ts=R.map(o=>o.t),vs=R.map(o=>o[k]).concat(tr.map(p=>p[1]));
-  let t0=Math.min(...ts),t1=Math.max(...ts),v0=Math.min(...vs),v1=Math.max(...vs);const pad=(v1-v0)*0.12||1;v0-=pad;v1+=pad;
-  const x=t=>pl+(t-t0)/(t1-t0||1)*(W-pl-pr),y=v=>pt+(1-(v-v0)/(v1-v0))*(H-pt-pb);
-  let g='';const nt=narrow?3:5;
-  for(let i=0;i<=nt;i++){const v=v0+(v1-v0)*i/nt;g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="12" fill="var(--mut)">${f(v,1)}</text>`}
-  const nx=narrow?3:5;for(let i=0;i<=nx;i++){const t=t0+(t1-t0)*i/nx;g+=`<text x="${x(t)}" y="${H-8}" text-anchor="${i==0?'start':i==nx?'end':'middle'}" font-size="12" fill="var(--mut)">${new Date(t).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}</text>`}
-  g+=R.map(o=>`<circle cx="${x(o.t)}" cy="${y(o[k])}" r="3.5" fill="var(--mut)" opacity=".55"/>`).join('');
-  g+=`<path d="${tr.map((p,i)=>(i?'L':'M')+x(p[0]).toFixed(1)+' '+y(p[1]).toFixed(1)).join('')}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linejoin="round"/>`;
+let proto='jp7';
+function sDobras(c){
+  const K=skinRows(c),sites=PROTO[proto].s(+c.sex),lw=latestWeight(c);
+  let h=`<div class="card"><h3>Nova avaliação de dobras</h3>
+  <div class="form" style="margin:10px 0"><label>Protocolo<select id="kP"><option value="jp7">Pollock 7 dobras</option><option value="jp3">Pollock 3 dobras</option></select></label><label>Data<input type="datetime-local" id="kT" value="${nowLocal()}"></label><label>Peso (kg)<input type="number" id="kW" step="0.05" value="${lw?lw.toFixed(1):''}"></label></div>
+  <p class="mut">Até 3 medidas por ponto, em mm. O app usa a média.</p>
+  <div class="site mut" style="font-size:12px"><span>Ponto</span><span style="text-align:center">1ª</span><span style="text-align:center">2ª</span><span style="text-align:center">3ª</span><span style="text-align:right">Média</span></div>
+  ${sites.map(s=>`<div class="site"><b>${SITES[s]}</b>${[0,1,2].map(i=>`<input type="number" step="0.5" min="0" inputmode="decimal" data-s="${s}" data-i="${i}" aria-label="${SITES[s]} medida ${i+1}">`).join('')}<span class="m" id="m-${s}">–</span></div>`).join('')}
+  <div class="result" id="kRes" style="margin-top:14px"></div>
+  <button class="pri" id="kSave" style="margin-top:12px;width:100%">Salvar avaliação</button></div>`;
+  if(K.length)h+=`<div class="card"><h3>Histórico</h3><div class="scroll"><table><thead><tr><th>Data</th><th>Protocolo</th><th>Soma</th><th>Gordura</th><th>M. gorda</th><th>M. magra</th><th></th></tr></thead><tbody>${K.slice().reverse().map(o=>`<tr><td>${dd(o.t)}</td><td>${o.proto==='jp7'?'7 dobras':'3 dobras'}</td><td>${f(o.sum,1)} mm</td><td>${f(o.sbf,1)}%</td><td>${f(o.sfm,1)}</td><td>${f(o.slbm,1)}</td><td><button class="sm ghost danger" data-del="skins|${o.t}">Apagar</button></td></tr>`).join('')}</tbody></table></div><p class="mut">Densidade corporal por Jackson &amp; Pollock; % de gordura pela equação de Siri.</p></div>`;
+  $('#sub').innerHTML=h;$('#kP').value=proto;
+  const read=()=>{const folds={};sites.forEach(s=>folds[s]=[0,1,2].map(i=>+document.querySelector(`[data-s="${s}"][data-i="${i}"]`).value||0).filter(x=>x>0));return{t:new Date($('#kT').value).getTime(),proto,w:+$('#kW').value||null,folds}};
+  const upd=()=>{const e=read(),o=skinRow(e,c);sites.forEach(s=>$('#m-'+s).textContent=f(mean(e.folds[s]),1));
+    $('#kRes').innerHTML=o.sbf!=null?`<div><div class="num">${f(o.sbf,1)}%</div><p>Gordura</p></div><div><div class="num">${f(o.sum,1)}</div><p>Soma (mm)</p></div><div><div class="num">${f(o.sfm,1)}</div><p>Massa gorda (kg)</p></div><div><div class="num">${f(o.slbm,1)}</div><p>Massa magra (kg)</p></div><div><div class="num">${f(o.bd,4)}</div><p>Densidade</p></div>`:`<p style="opacity:1">Preencha todos os ${sites.length} pontos para ver o resultado.</p>`};
+  $('#sub').addEventListener('input',e=>{if(e.target.dataset.s||e.target.id==='kW'||e.target.id==='kT')upd()});
+  $('#kP').onchange=e=>{proto=e.target.value;sDobras(c)};
+  $('#kSave').onclick=()=>{const e=read();if(skinRow(e,c).sbf==null){toast('Preencha todos os pontos');return}c.skins.push(e);save();toast('Avaliação de dobras salva');sDobras(c)};
+  upd();
+}
+
+/* ---------- Evolução ---------- */
+const MET=[
+ ['Balança',[['w','Peso','kg'],['bf','Gordura','%'],['fm','Massa gorda','kg'],['lbm','Massa magra','kg'],['smm','Músculo esquelético','kg'],['visc','Gordura visceral',''],['water','Água','%'],['ffmiN','FFMI','']],'b'],
+ ['Dobras',[['sbf','Gordura (dobras)','%'],['sum','Soma das dobras','mm'],['slbm','Massa magra (dobras)','kg']],'k'],
+ ['Perimetria',[['navy','Gordura (Marinha)','%'],['rce','Cintura/altura',''],...TAPE.map(([k,n])=>[k,n,'cm'])],'t'],
+ ['Comparar',[['cmp','% gordura: 3 métodos','%']],'x']];
+function vEvolucao(c){
+  const avail=k=>{if(k==='cmp')return true;for(const[,ms,src] of MET)for(const[m] of ms)if(m===k){const R=src==='b'?biaRows(c):src==='k'?skinRows(c):tapeRows(c);return R.filter(o=>o[k]!=null).length>0}return false};
+  if(!avail(evMetric))evMetric='w';
+  $('#app').innerHTML=`<div class="card"><div class="row between"><h2>Evolução</h2><div class="chips" id="per">${[[30,'30 dias'],[90,'90 dias'],[180,'6 meses'],[365,'1 ano'],[0,'Tudo']].map(([d,n])=>`<button data-p="${d}" aria-pressed="${evPeriod===d}">${n}</button>`).join('')}</div></div>
+  <div class="fig" style="margin-top:10px"><svg id="ch" role="img" aria-label="Gráfico de evolução"></svg></div><div class="legend" id="lg"></div><p class="mut" id="chN"></p></div>
+  <div class="card">${MET.map(([g,ms])=>{const a=ms.filter(([k])=>avail(k));return a.length?`<div class="grp">${g}</div><div class="chips">${a.map(([k,n])=>`<button data-m="${k}" aria-pressed="${evMetric===k}">${n}</button>`).join('')}</div>`:''}).join('')}</div>`;
+  $('#per').onclick=e=>{const b=e.target.closest('button');if(b){evPeriod=+b.dataset.p;vEvolucao(c)}};
+  document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{evMetric=b.dataset.m;vEvolucao(c)});
+  drawEv();
+}
+function evSeries(c){
+  const from=evPeriod?Date.now()-evPeriod*864e5:0,cut=R=>R.filter(o=>o.t>=from);
+  if(evMetric==='cmp')return{u:'%',s:[{n:'Balança',col:'var(--pri)',pts:cut(biaRows(c)).filter(o=>o.bf!=null).map(o=>[o.t,o.bf])},{n:'Dobras',col:'var(--c2)',pts:cut(skinRows(c)).filter(o=>o.sbf!=null).map(o=>[o.t,o.sbf])},{n:'Fita (Marinha)',col:'var(--c3)',pts:cut(tapeRows(c)).filter(o=>o.navy!=null).map(o=>[o.t,o.navy])}].filter(s=>s.pts.length)};
+  for(const[,ms,src] of MET)for(const[k,n,u] of ms)if(k===evMetric){const R=cut(src==='b'?biaRows(c):src==='k'?skinRows(c):tapeRows(c)).filter(o=>o[k]!=null);
+    const s=[{n,col:src==='b'?'var(--mut)':'var(--pri)',pts:R.map(o=>[o.t,o[k]]),dots:src==='b'}];if(src==='b'&&R.length>2)s.push({n:'Tendência (7 dias)',col:'var(--pri)',pts:ema(R,k),line:true});return{u,n,s}}
+  return{u:'',s:[]};
+}
+function drawEv(){
+  const svg=$('#ch');if(!svg)return;const c=cl();if(!c)return;const W=svg.clientWidth,H=svg.clientHeight;if(!W)return;
+  const {u,s}=evSeries(c),all=s.flatMap(x=>x.pts);
+  if(all.length<2){svg.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="var(--mut)" font-size="14">Precisa de 2 registros ou mais no período</text>`;$('#lg').innerHTML='';$('#chN').textContent='';return}
+  const narrow=W<520,pl=narrow?38:48,pr=12,pt=12,pb=26;let t0=Math.min(...all.map(p=>p[0])),t1=Math.max(...all.map(p=>p[0])),v0=Math.min(...all.map(p=>p[1])),v1=Math.max(...all.map(p=>p[1]));const pad=(v1-v0)*0.12||1;v0-=pad;v1+=pad;if(t1===t0){t0-=864e5;t1+=864e5}
+  const x=t=>pl+(t-t0)/(t1-t0)*(W-pl-pr),y=v=>pt+(1-(v-v0)/(v1-v0))*(H-pt-pb),dec=v1-v0<2?2:1;let g='';
+  for(let i=0,n=narrow?3:5;i<=n;i++){const v=v0+(v1-v0)*i/n;g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${f(v,dec)}</text>`}
+  for(let i=0,n=narrow?2:4;i<=n;i++){const t=t0+(t1-t0)*i/n;g+=`<text x="${x(t)}" y="${H-6}" text-anchor="${i==0?'start':i==n?'end':'middle'}" font-size="11" fill="var(--mut)">${new Date(t).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}</text>`}
+  s.forEach(se=>{const d=se.pts.map((p,i)=>(i?'L':'M')+x(p[0]).toFixed(1)+' '+y(p[1]).toFixed(1)).join('');
+    if(se.dots)g+=se.pts.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.5" fill="${se.col}" opacity=".5"/>`).join('');
+    else{g+=`<path d="${d}" fill="none" stroke="${se.col}" stroke-width="${se.line?3:2.5}" stroke-linejoin="round"/>`;if(!se.line)g+=se.pts.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="4.5" fill="var(--card)" stroke="${se.col}" stroke-width="2.5"/>`).join('')}});
   svg.innerHTML=g;
-  const a=tr[0][1],b=tr[tr.length-1][1];
-  $('#chartNote').textContent=`Pontos: medições. Linha: tendência (média móvel de ~7 dias). ${MET[k][0]}: ${f(a,1)} → ${f(b,1)} ${MET[k][1]} no período.`;
+  $('#lg').innerHTML=s.map(se=>`<span><i style="background:${se.col}"></i>${esc(se.n)}</span>`).join('');
+  const main=s.find(x=>x.line)||s[0];$('#chN').textContent=s.length&&main.pts.length>1&&evMetric!=='cmp'?`No período: ${f(main.pts[0][1],dec)} → ${f(main.pts.at(-1)[1],dec)} ${u} (${sg(main.pts.at(-1)[1]-main.pts[0][1],dec)}).`:evMetric==='cmp'?'Cada método tem seu viés; compare a direção das linhas, não só o valor.':'';
 }
-const ro=new ResizeObserver(drawChart);ro.observe(svg);
+const ro=new ResizeObserver(()=>{if(view==='evolucao')drawEv()});ro.observe(document.body);
 
-/* ---------- ações ---------- */
-document.addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(!d)return;const t=+d.dataset.del;
-  if(d.dataset.sure){S.items=S.items.filter(i=>i.t!==t);save();render()}else{d.dataset.sure=1;d.textContent='Confirmar?'}});
-function fillProf(){const p=S.profile;$('#pSex').value=String(p.sex);$('#pBirth').value=p.birth||'';$('#pH').value=p.h||'';$('#pAct').value=String(p.act)}
-$('#prof').addEventListener('submit',e=>{e.preventDefault();S.profile={sex:+$('#pSex').value,birth:$('#pBirth').value,h:+$('#pH').value,act:+$('#pAct').value};save();render()});
-function addItem(it){if(!(it.w>10&&it.w<400))return false;if(S.items.some(i=>Math.abs(i.t-it.t)<60000))return false;S.items.push(it);return true}
+/* ---------- Ajustes ---------- */
+function vAjustes(){
+  const n=S.clients.length,m=S.clients.reduce((s,c)=>s+c.items.length+c.tapes.length+c.skins.length,0);
+  $('#app').innerHTML=`<div class="card"><h2>Backup</h2><p>Os dados ficam salvos <b>neste celular</b> (${n} clientes, ${m} registros). Faça backup com frequência: se o navegador for limpo, os dados somem.</p>
+  <div class="row" style="margin-top:10px"><button class="pri" id="aExp">Baixar backup</button><button id="aImp">Restaurar backup</button></div></div>
+  <div class="card"><h2>Instalar como aplicativo</h2><p>No Chrome, toque no menu ⋮ e em <b>Adicionar à tela inicial</b> (ou <b>Instalar app</b>). O app abre em tela cheia, como um aplicativo.</p></div>
+  <details class="card"><summary>Balança por Bluetooth</summary><p>A balança OKOK anuncia peso e impedância sem pareamento. O Chrome do Android lê esse sinal com <b>chrome://flags</b> → <b>Experimental Web Platform features</b> ativado. Feche o openScale antes de medir. Também é possível importar o CSV exportado pelo openScale na aba Balança.</p></details>
+  <details class="card"><summary>Padronização das avaliações</summary><p><b>Balança:</b> ao acordar, em jejum, após ir ao banheiro, descalço e com os pés secos.</p><p><b>Dobras:</b> lado direito, cliente relaxado, pinçar 1 cm acima do ponto, ler 2 s após soltar o adipômetro; repetir até 3 vezes.</p><p><b>Perimetria:</b> fita firme sem comprimir; cintura no ponto mais estreito, abdômen na altura do umbigo, quadril na maior circunferência dos glúteos, braço contraído no pico do bíceps.</p></details>`;
+  $('#aExp').onclick=()=>{const b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='avaliacao-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('Backup baixado')};
+  $('#aImp').onclick=()=>$('#fBak').click();
+}
+$('#fBak').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{const j=JSON.parse(await file.text());if(!Array.isArray(j.clients))throw 0;
+  let add=0,upd=0;j.clients.forEach(c=>{c.items??=[];c.tapes??=[];c.skins??=[];const i=S.clients.findIndex(x=>x.id===c.id);if(i>=0){S.clients[i]=c;upd++}else{S.clients.push(c);add++}});
+  if(!S.cur)S.cur=S.clients[0]?.id;save();toast(`Backup restaurado: ${add} novos, ${upd} atualizados`);render()}catch(err){toast('Arquivo de backup inválido')}};
 
-const dlg=$('#dlg');
-function openDlg(html){dlg.innerHTML=html+'<div class="acts" style="margin-top:16px;justify-content:flex-end"><button id="dClose">Fechar</button></div>';dlg.showModal();$('#dClose').onclick=()=>{stopBle();dlg.close()}}
-
-$('#bAdd').onclick=()=>{
-  const now=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);
-  openDlg(`<h2>Adicionar medição</h2><form id="mf" class="form" style="grid-template-columns:1fr 1fr">
-  <label>Data e hora<input type="datetime-local" id="mT" value="${now}" required></label>
-  <label>Peso (kg)<input type="number" id="mW" step="0.05" required></label>
-  <label>Impedância (Ω, opcional)<input type="number" id="mR" step="0.1"></label>
-  <label>ou % gordura (opcional)<input type="number" id="mB" step="0.1"></label>
-  <button class="pri" type="submit">Salvar</button></form>`);
-  $('#mf').onsubmit=e=>{e.preventDefault();const it={t:new Date($('#mT').value).getTime(),w:+$('#mW').value,src:'manual'};if(+$('#mR').value)it.r=+$('#mR').value;else if(+$('#mB').value)it.bf=+$('#mB').value;if(addItem(it)){save();render()}dlg.close()};
-};
-
-/* CSV do openScale: colunas DATE, TIME, WEIGHT, IMPEDANCE, BODY_FAT (ou dateTime em versões antigas) */
+/* ---------- CSV openScale ---------- */
 $('#fCsv').onchange=async e=>{
-  const file=e.target.files[0];if(!file)return;const txt=await file.text();e.target.value='';
-  const lines=txt.split(/\r?\n/).filter(Boolean),split=l=>l.split(/[,;](?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c=>c.replace(/^"|"$/g,'').trim());
-  const hd=split(lines[0]).map(h=>h.toUpperCase()),ix=n=>hd.indexOf(n);
-  const iD=ix('DATE'),iT=ix('TIME'),iDT=ix('DATETIME'),iW=ix('WEIGHT'),iR=ix('IMPEDANCE'),iB=ix('BODY_FAT');
-  let n=0,skip=0;
-  if(iW<0||(iD<0&&iDT<0)){openDlg('<h2>CSV não reconhecido</h2><p>Não encontrei as colunas de data e peso. Exporte pelo openScale (Menu → Exportar) e tente de novo.</p>');return}
-  for(const l of lines.slice(1)){const c=split(l);const ds=iDT>=0?c[iDT].replace(' ','T'):(c[iD]+'T'+((iT>=0&&c[iT])||'08:00'));const t=new Date(ds).getTime(),w=parseFloat(c[iW]);
-    const it={t,w,src:'openScale'};const r=iR>=0?parseFloat(c[iR]):NaN,b=iB>=0?parseFloat(c[iB]):NaN;if(r>0)it.r=r;else if(b>0)it.bf=b;
-    if(!isNaN(t)&&addItem(it))n++;else skip++}
-  save();render();openDlg(`<h2>Importação concluída</h2><p>${n} medições importadas${skip?`, ${skip} ignoradas (repetidas ou inválidas)`:''}.</p>${iR<0?'<p class="note">O arquivo não tem a coluna de impedância. A composição vem do % de gordura que o openScale gravou.</p>':''}`);
+  const c=cl(),file=e.target.files[0];e.target.value='';if(!file||!c)return;const txt=await file.text();
+  const lines=txt.split(/\r?\n/).filter(Boolean),split=l=>l.split(/[,;](?=(?:[^"]*"[^"]*")*[^"]*$)/).map(x=>x.replace(/^"|"$/g,'').trim());
+  const hd=split(lines[0]).map(x=>x.toUpperCase()),ix=n=>hd.indexOf(n),iD=ix('DATE'),iT=ix('TIME'),iDT=ix('DATETIME'),iW=ix('WEIGHT'),iR=ix('IMPEDANCE'),iB=ix('BODY_FAT');
+  if(iW<0||(iD<0&&iDT<0)){openDlg('<h2>CSV não reconhecido</h2><p>Não encontrei as colunas de data e peso. Exporte pelo openScale e tente de novo.</p>');return}
+  let n=0;for(const l of lines.slice(1)){const x=split(l),ds=iDT>=0?x[iDT].replace(' ','T'):x[iD]+'T'+((iT>=0&&x[iT])||'08:00'),it={t:new Date(ds).getTime(),w:parseFloat(x[iW]),src:'openScale'};
+    const r=iR>=0?parseFloat(x[iR]):NaN,b=iB>=0?parseFloat(x[iB]):NaN;if(r>0)it.r=r;else if(b>0)it.bf=b;if(addItem(c,it))n++}
+  save();toast(n+' medições importadas para '+c.name);render();
 };
 
-/* ---------- Bluetooth: anúncio OKOK (sem pareamento) ---------- */
+/* ---------- apagar ---------- */
+document.addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(!d)return;const c=cl(),[k,t]=d.dataset.del.split('|');
+  if(!d.dataset.sure){d.dataset.sure=1;d.textContent='Confirmar?';return}c[k]=c[k].filter(i=>i.t!==+t);save();toast('Registro apagado');render()});
+
+/* ---------- diálogo ---------- */
+const dlg=$('#dlg');
+function openDlg(html,noClose){dlg.innerHTML=html+(noClose?'':'<div class="row" style="margin-top:14px;justify-content:flex-end"><button id="dX">Fechar</button></div>');dlg.showModal();$('#dX')?.addEventListener('click',()=>{stopBle();dlg.close()})}
+dlg.addEventListener('close',stopBle);
+
+/* ---------- Bluetooth OKOK ---------- */
 let abortBle=null;
 function stopBle(){if(abortBle){abortBle.abort();abortBle=null}}
 function parseOkok(id,dv){
   if((id&0xff)===0xC0&&dv.byteLength>=13){const at=dv.getUint8(6),div=[10,1,100,10][(at>>1)&3],u=(at>>3)&3,raw=dv.getUint16(0);
-    let kg=u==0?raw/div:u==1?raw/div/2:u==2?raw/div/2.204623:dv.getUint8(0)*6.350293+dv.getUint8(1)/div*0.453592;
-    return{kg,r:dv.getUint16(2)/10,stable:!!(at&1)}}
+    const kg=u==0?raw/div:u==1?raw/div/2:u==2?raw/div/2.204623:dv.getUint8(0)*6.350293+dv.getUint8(1)/div*0.453592;return{kg,r:dv.getUint16(2)/10,stable:!!(at&1)}}
   if(id===0x20ca&&dv.byteLength===19){const fl=dv.getUint8(6);return{kg:dv.getUint16(8)/((fl&4)?100:10),r:dv.getUint16(10)/10,stable:!!(fl&1)}}
   return null;
 }
-$('#bBle').onclick=async()=>{
-  if(!S.profile.h||!S.profile.birth){openDlg('<h2>Complete o perfil primeiro</h2><p>Sexo, nascimento e altura são necessários para calcular a composição.</p>');return}
-  if(!navigator.bluetooth){openDlg('<h2>Bluetooth indisponível aqui</h2><p>Este navegador ou esta janela não libera Bluetooth para a página. Use o Chrome no Android, abrindo a página em tela cheia. Enquanto isso, meça pelo openScale e importe o CSV.</p>');return}
+async function ble(c){
+  if(!c.h||!c.birth){openDlg('<h2>Complete o cadastro</h2><p>Nascimento e altura do cliente são necessários para a composição corporal.</p>');return}
+  if(!navigator.bluetooth){openDlg('<h2>Bluetooth indisponível</h2><p>Use o Chrome no Android. Se já estiver nele, ative <b>chrome://flags</b> → <b>Experimental Web Platform features</b>.</p>');return}
   const ids=[0x20ca,0x11ca,0xf0ff];for(let h=0;h<256;h++)ids.push((h<<8)|0xC0);
-  let dev;
-  try{dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalManufacturerData:ids})}
-  catch(e){if(e.name!=='NotFoundError')openDlg(`<h2>Não consegui abrir o Bluetooth</h2><p>${e.name==='SecurityError'?'A página está numa janela que bloqueia Bluetooth. Abra o link direto no Chrome.':'Erro: '+String(e.message).replace(/[<>&]/g,'')}</p>`);return}
-  if(!dev.watchAdvertisements){openDlg('<h2>Falta ativar uma opção do Chrome</h2><p>Abra <b>chrome://flags</b>, ative <b>Experimental Web Platform features</b>, reinicie o Chrome e tente de novo.</p>');return}
-  openDlg(`<h2>Suba na balança</h2><p class="mut">${String(dev.name||'OKOK').replace(/[<>&]/g,'')} · descalço, parado até estabilizar.</p><div class="live" id="lv">– – kg</div><p class="mut" id="ls">Aguardando sinal…</p>`);
+  let dev;try{dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalManufacturerData:ids})}
+  catch(e){if(e.name!=='NotFoundError')openDlg('<h2>Não consegui abrir o Bluetooth</h2><p>'+esc(e.message)+'</p>');return}
+  if(!dev.watchAdvertisements){openDlg('<h2>Falta ativar uma opção do Chrome</h2><p>Abra <b>chrome://flags</b>, ative <b>Experimental Web Platform features</b> e reinicie o Chrome.</p>');return}
+  openDlg(`<h2>${esc(c.name)}: suba na balança</h2><p class="mut">Descalço, parado até estabilizar.</p><div class="live" id="lv">– – kg</div><p class="mut" id="ls" style="text-align:center">Aguardando sinal…</p>`);
   abortBle=new AbortController();let done=false;
   dev.addEventListener('advertisementreceived',ev=>{if(done)return;ev.manufacturerData.forEach((dv,id)=>{const p=parseOkok(id,dv);if(!p||done)return;
     $('#lv').textContent=f(p.kg,1)+' kg';$('#ls').textContent=p.stable?'Estável — salvando':'Medindo… fique parado';
-    if(p.stable&&p.kg>10){done=true;stopBle();const it={t:Date.now(),w:+p.kg.toFixed(2),src:'bluetooth'};if(p.r>0)it.r=p.r;addItem(it);save();render();
-      $('#ls').textContent=p.r>0?`Salvo, com impedância de ${f(p.r,1)} Ω.`:'Salvo (sem impedância — fique descalço para medir a composição).'}})});
-  try{await dev.watchAdvertisements({signal:abortBle.signal})}catch(e){$('#ls').textContent='Não consegui escutar a balança: '+String(e.message).replace(/[<>&]/g,'')}
-};
+    if(p.stable&&p.kg>10){done=true;stopBle();const it={t:Date.now(),w:+p.kg.toFixed(2),src:'bluetooth'};if(p.r>0)it.r=p.r;addItem(c,it);save();render();
+      $('#ls').textContent=p.r>0?`Salvo para ${c.name}, impedância ${f(p.r,1)} Ω.`:'Salvo (sem impedância: fique descalço para a composição).'}})});
+  try{await dev.watchAdvertisements({signal:abortBle.signal})}catch(e){$('#ls').textContent='Não consegui escutar a balança: '+e.message}
+}
 
 /* ---------- início ---------- */
-loadLocal();fillProf();render();setSync('Dados neste navegador.');
-(async()=>{try{
-  if(!window.claude||!claude.use){return}
-  db=await claude.use('db');const user=await claude.use('user');const uid=user&&await user.id();
-  if(!db||!uid){setSync('Dados salvos só neste navegador.');return}
-  docRef=db.doc('data/users/'+uid+'/state');
-  const timer=setTimeout(()=>setSync('Conta ainda não respondeu; usando dados deste navegador.'),10000);
-  const snap=await docRef.get();clearTimeout(timer);
-  if(snap.exists){const d=snap.data();const merged=JSON.parse(JSON.stringify(d));
-    const local=S.items.filter(i=>!merged.items.some(j=>Math.abs(j.t-i.t)<60000));merged.items=merged.items.concat(local);
-    if(!merged.profile.h&&S.profile.h)merged.profile=S.profile;S=merged;if(local.length)save()}
-  else if(S.items.length||S.profile.h)save();
-  fillProf();render();setSync('Sincronizado com sua conta.');
-}catch(e){setSync('Dados salvos só neste navegador.')}})();
+load();
+const h=location.hash.slice(1);if(['clientes','painel','avaliar','evolucao','ajustes'].includes(h))view=h;else view=S.cur?'painel':'clientes';
+render();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 </script>
 </body>
